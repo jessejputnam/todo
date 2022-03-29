@@ -1,6 +1,17 @@
-import { MasterList, List, Task } from "./todo-logic.js";
+"use strict";
 
-("use strict");
+import { MasterList } from "./todo-logic.js";
+
+//TESTING AREA
+/**
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 // TEST SAMPLES
 // Create Master List
 const masterList = new MasterList();
@@ -18,11 +29,13 @@ masterList.items[0].addItem("test3", "c test3 desc", "7.16");
 masterList.items[0].addItem("test4", "d test4 desc", "12.22");
 masterList.items[0].addItem("test5", "e test5 desc", "3.22");
 
-// masterList.items[0].items[1].priority = true;
+// masterList.items[0].items[1].completed = true;
 masterList.items[0].items[1].dateCreated = 100;
-// masterList.items[0].items[4].priority = true;
+// masterList.items[0].items[4].completed = true;
 
 console.log(masterList.items[0].items);
 
+masterList.items[0].items[4].toggleCompleted();
+
 masterList.items[0].items[1].togglePriority();
-console.log(masterList.items[0].items[1]);
+console.table(masterList.items[0].items);

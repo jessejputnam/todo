@@ -78,6 +78,10 @@ class List extends MasterList {
     this.items.push(new Task(title, desc, dateDue));
     return this;
   }
+
+  _clearCompletedTasks() {
+    this.items = this.items.filter((a) => a.completed === false);
+  }
 }
 
 // TASKS
@@ -89,6 +93,7 @@ class Task {
     this.dateDue = +dateDue;
     this.priority = false;
     this.completed = false;
+    this.completedDate;
   }
 
   // Toggle Completed
@@ -96,6 +101,16 @@ class Task {
     this.completed === false
       ? (this.completed = true)
       : (this.completed = false);
+
+    if (this.completed === true)
+      this.completedDate = new Date().toLocaleString(navigator.languages[0], {
+        year: "numeric",
+        month: "short",
+        day: "2-digit",
+      });
+
+    if (this.completed === false) this.completedDate = "";
+
     return this;
   }
 
