@@ -1,49 +1,81 @@
 "use strict";
 
 // MASTER LIST
-const masterList = {
-  lists: [],
+class MasterList {
+  constructor() {
+    this.items = [];
+  }
 
-  _addList(title) {
-    this.lists.push(new List(title));
-  },
-};
+  addItem(title) {
+    this.items.push(new List(title));
+    return this;
+  }
 
-const addList = function () {};
+  deleteItem(index) {
+    this.items.splice(index, 1);
+    return this;
+  }
+
+  moveItem(index, dir) {
+    const movedItem = this.items.splice(index, 1)[0];
+    console.log(movedItem);
+    console.log(index + dir);
+    this.items.splice(index + dir, 0, movedItem);
+    return this;
+  }
+
+  sortItems(category, reverseCheck) {
+    if (category === "dateDue" || category === "completed") {
+      reverseCheck === false
+        ? this.items.sort((a, b) => a[category] - b[category])
+        : this.items.sort((a, b) => b[category] - a[category]);
+    } else if (category === "title") {
+      reverseCheck === false
+        ? this.items.sort((a, b) => {
+            const nameA = a.title.toUpperCase();
+            const nameB = b.title.toUpperCase();
+            if (nameA < nameB) {
+              return -1;
+            }
+            if (nameA > nameB) {
+              return 1;
+            }
+
+            return 0;
+          })
+        : this.items.sort((a, b) => {
+            const nameA = a.title.toUpperCase();
+            const nameB = b.title.toUpperCase();
+            if (nameA < nameB) {
+              return 1;
+            }
+            if (nameA > nameB) {
+              return -1;
+            }
+
+            return 0;
+          });
+    } else
+      reverseCheck === false
+        ? this.items.sort((a, b) => b[category] - a[category])
+        : this.items.sort((a, b) => a[category] - b[category]);
+    return this;
+  }
+}
 
 // LISTS
-class List {
+class List extends MasterList {
   constructor(title) {
+    super();
     this.title = title;
     this.dateCreated = Date.now();
-    this.sortedBy = "dateCreated";
-    this.sortReverse = false;
     this.color = "initial";
-    this.tasks = [];
+    this.items = [];
   }
 
   // Add Task
-  _addTask(title, desc, dateDue) {
-    this.tasks.push(new Task(title, desc, dateDue));
-    return this;
-  }
-
-  // Delete Task
-  _deleteTask(index) {
-    this.tasks.splice(index, 1);
-    return this;
-  }
-
-  // Sort Tasks
-  _sortList(category, reverseCheck) {
-    if (category === "dateDue" || category === "completed") {
-      reverseCheck === false
-        ? this.tasks.sort((a, b) => a[category] - b[category])
-        : this.tasks.sort((a, b) => b[category] - a[category]);
-    } else
-      reverseCheck === false
-        ? this.tasks.sort((a, b) => b[category] - a[category])
-        : this.tasks.sort((a, b) => a[category] - b[category]);
+  addItem(title, desc, dateDue) {
+    this.items.push(new Task(title, desc, dateDue));
     return this;
   }
 }
@@ -53,43 +85,40 @@ class Task {
   constructor(title, desc, dateDue) {
     this.title = title;
     this.desc = desc;
-    this.dateDue = dateDue;
-    this.priority = false;
     this.dateCreated = Date.now();
+    this.dateDue = +dateDue;
+    this.priority = false;
     this.completed = false;
   }
 
   // Toggle Completed
-  _toggleCompleted() {
+  toggleCompleted() {
     this.completed === false
       ? (this.completed = true)
       : (this.completed = false);
     return this;
   }
+
+  //! Toggle Priority
 }
 
 // TEST SAMPLES
-masterList._addList("Test List");
+// Create Master List
+const masterList = new MasterList();
 
-// const testList = new List("Test List");
-masterList.lists[0]._addTask("test1", "test1 desc", "8.10");
-masterList.lists[0]._addTask("test2", "test2 desc", "8.08");
-masterList.lists[0]._addTask("test3", "test3 desc", "7.16");
-masterList.lists[0]._addTask("test4", "test4 desc", "12.22");
-masterList.lists[0]._addTask("test5", "test5 desc", "3.22");
+// Add Lists to Master List
+masterList.addItem("Test List");
+masterList.addItem("A Test List 2");
+masterList.addItem("Test List 3");
+masterList.addItem("Test List 4");
 
-masterList.lists[0].tasks[1].priority = true;
-masterList.lists[0].tasks[1].dateCreated = 100;
-masterList.lists[0].tasks[4].priority = true;
+// Add Tasks to List in Master List
+masterList.items[0].addItem("test1", "a test1 desc", "8.10");
+masterList.items[0].addItem("test2", "b test2 desc", "8.08");
+masterList.items[0].addItem("test3", "c test3 desc", "7.16");
+masterList.items[0].addItem("test4", "d test4 desc", "12.22");
+masterList.items[0].addItem("test5", "e test5 desc", "3.22");
 
-// masterList.lists[0]._sortList("priority", false);
-
-// console.log(testList.tasks[0]);
-masterList.lists[0].tasks[2]._toggleCompleted();
-masterList.lists[0].tasks[4]._toggleCompleted();
-
-console.table(masterList.lists[0].tasks);
-
-masterList.lists[0]._sortList("completed", false);
-
-console.table(masterList.lists[0].tasks);
+masterList.items[0].items[1].priority = true;
+masterList.items[0].items[1].dateCreated = 100;
+masterList.items[0].items[4].priority = true;
