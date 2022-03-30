@@ -5,6 +5,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Red+Hat+Display&display=swap"
+      rel="stylesheet"
+    />
+
     <link href="./css/reset.css" rel="stylesheet" />
     <link href="./css/styles.css" rel="stylesheet" />
 
@@ -21,15 +28,76 @@
         </div>
 
         <div class="logo__container">
-          <img src="./images/logo.svg" class="logo" />
+          <img
+            src="./images/logo.svg"
+            alt="Due It! logo"
+            height="120px"
+            class="logo"
+          />
         </div>
 
         <div class="btn btn--header add-task">
-          <img src="./images/add-task.svg" />
+          <img
+            src="./images/add-task.svg"
+            title="Add task"
+            alt="Add task"
+            height="45px"
+          />
         </div>
       </div>
     </header>
 
-    <main></main>
+    <main>
+      <section class="main-app">
+        <h2>Default List</h2>
+        <div class="taskitem">
+          <input
+            type="checkbox"
+            id="completed"
+            name="completed"
+            class="taskitem__checkbox"
+          />
+          <div class="taskitem__txtbox">
+            <h3>Task Item</h3>
+            <p>due in 3 days</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="sidebar hidden">
+        <h2 class="sidebar__title">My Lists</h2>
+        <div class="sidebar__listitem">
+          <img
+            src="./images/lists-menu.png"
+            height="20px"
+            class="listitem__options"
+          />
+          <div class="listitem__title">Default List</div>
+          <div class="listitem__inc-count">
+            <div class="listitem__inc-count__title">Tasks Due:</div>
+            <div class="listitem__inc-count__count">10</div>
+          </div>
+        </div>
+
+        <div class="sidebar__listitem">
+          <img
+            src="./images/lists-menu.png"
+            height="20px"
+            class="listitem__options"
+          />
+          <div class="listitem__title">Default List</div>
+          <div class="listitem__inc-count">
+            <div class="listitem__inc-count__title">Tasks Due:</div>
+            <div class="listitem__inc-count__count">10</div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <a href="https://www.flaticon.com/free-icons/list" title="list icons"
+        >List icons created by Chanut - Flaticon</a
+      >
+    </footer>
   </body>
 </html>
