@@ -19,6 +19,9 @@ import { MasterList } from "./todo-logic.js";
 /* ************************************************** */
 // -- Buttons
 const btnListsMenu = document.querySelector(".lists-menu");
+const listsMenuEndBars = document.querySelectorAll(".bar__end");
+const listsMenuMidBar1 = document.querySelector(".bar__mid");
+const listsMenuMidBar2 = document.querySelector(".bar__mid2");
 
 // -- Windows
 const sidebar = document.querySelector(".sidebar");
@@ -28,13 +31,18 @@ const sidebar = document.querySelector(".sidebar");
 /* ************************************************** */
 
 /* Stops sidebar from popping briefly in view on page load */
-sidebar.style.display = "flex";
 
 /* ************************************************** */
 //* HEADER BUTTONS
 /* ************************************************** */
 btnListsMenu.addEventListener("click", () => {
+  // Reveal side bar
   sidebar.classList.toggle("hidden");
+
+  // Tranform close button
+  listsMenuEndBars.forEach((bar) => bar.classList.toggle("bar--vanish"));
+  listsMenuMidBar1.classList.toggle("bar__mid--rotate");
+  listsMenuMidBar2.classList.toggle("bar__mid2--rotate");
 });
 
 /* ************************************************** */
