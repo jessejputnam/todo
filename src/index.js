@@ -1,6 +1,44 @@
 "use strict";
 
+/**
+ TABLE OF CONTENTS
+ * Modules
+ * DOM Variables
+ * On Load Actions
+ * Header Buttons
+ * 
+*/
+
+/* ************************************************** */
+//* MODULES
+/* ************************************************** */
 import { MasterList } from "./todo-logic.js";
+
+/* ************************************************** */
+//* DOM VARIABLES
+/* ************************************************** */
+// -- Buttons
+const btnListsMenu = document.querySelector(".lists-menu");
+
+// -- Windows
+const sidebar = document.querySelector(".sidebar");
+
+/* ************************************************** */
+//* ON LOAD ACTIONS
+/* ************************************************** */
+
+/* Stops sidebar from popping briefly in view on page load */
+sidebar.style.display = "flex";
+
+/* ************************************************** */
+//* HEADER BUTTONS
+/* ************************************************** */
+btnListsMenu.addEventListener("click", () => {
+  sidebar.classList.toggle("hidden");
+});
+
+/* ************************************************** */
+/* ************************************************** */
 
 //TESTING AREA
 /**
