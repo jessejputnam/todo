@@ -21,7 +21,7 @@
   <body>
     <header>
       <div class="header--wrapper">
-        <div class="btn btn--header lists-menu">
+        <div class="btn btn__header lists-menu">
           <hr class="lists-menu__bar bar__end bar__end-top" />
           <hr class="lists-menu__bar bar__mid bar__mid1" />
           <hr class="lists-menu__bar bar__mid bar__mid2" />
@@ -37,7 +37,7 @@
           />
         </div>
 
-        <div class="btn btn--header add-task">
+        <div class="btn btn__header add-task">
           <img
             src="./images/add-task.svg"
             title="Add task"
@@ -52,10 +52,25 @@
       <section class="main-app">
         <h2>Default List</h2>
         <div class="taskitem">
+          <input type="checkbox" name="completed" class="taskitem__checkbox" />
+          <div class="taskitem__txtbox">
+            <h3>Task Item</h3>
+            <p>due in 3 days</p>
+          </div>
+          <div class="taskitem__details">
+            <img
+              src="./images/down-triangle.png"
+              alt="Open details"
+              title="Details"
+              height="20px"
+              class="btn btn__details"
+            />
+          </div>
+        </div>
+        <div class="taskitem">
           <input
             type="checkbox"
-            id="completed"
-            name="completed"
+            name="completed-checkbox"
             class="taskitem__checkbox"
           />
           <div class="taskitem__txtbox">
@@ -68,7 +83,7 @@
               alt="Open details"
               title="Details"
               height="20px"
-              class="btn btn--details"
+              class="btn btn__details"
             />
           </div>
         </div>

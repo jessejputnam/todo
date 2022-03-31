@@ -18,13 +18,21 @@ import { MasterList } from "./todo-logic.js";
 //* DOM VARIABLES
 /* ************************************************** */
 // -- Buttons
+// ---- Header
 const btnListsMenu = document.querySelector(".lists-menu");
 const listsMenuEndBars = document.querySelectorAll(".bar__end");
 const listsMenuMidBar1 = document.querySelector(".bar__mid");
 const listsMenuMidBar2 = document.querySelector(".bar__mid2");
 
+// ---- Tasks
+const checkboxTaskComplete =
+  document.getElementsByClassName("taskitem__checkbox");
+const btnTaskDetails = document.getElementsByClassName("btn__details");
+
 // -- Windows
 const sidebar = document.querySelector(".sidebar");
+
+// --
 
 /* ************************************************** */
 //* ON LOAD ACTIONS
@@ -46,7 +54,24 @@ btnListsMenu.addEventListener("click", () => {
 });
 
 /* ************************************************** */
+//* TASK BUTTONS
 /* ************************************************** */
+for (let box of checkboxTaskComplete) {
+  box.addEventListener("click", (e) => {
+    if (e.target.checked === true) {
+      // e.target.classList.add("");
+    }
+
+    console.log(box);
+  });
+}
+
+checkboxTaskComplete;
+// forEach((box) => {
+//   box.addEventListener("mousedown", (e) => {
+//     console.log(e.target);
+//   });
+// });
 
 //TESTING AREA
 /**

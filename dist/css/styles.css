@@ -80,6 +80,10 @@ input[type="checkbox"]::before {
   box-shadow: inset 1em 1em #ef7a8b;
 }
 
+input[type="checkbox"]:checked {
+  border-color: rgb(219, 203, 203);
+}
+
 input[type="checkbox"]:checked::before {
   transform: scale(1);
 }
@@ -149,14 +153,19 @@ input[type="checkbox"]:checked::before {
 }
 
 .taskitem {
-  border: solid 1px black;
+  border: solid 1px rgba(0, 0, 0, 0.041);
+  border-radius: 5px;
   padding: 5px 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 5px;
+  text-decoration: line-through;
+  color: rgb(219, 203, 203);
 }
 
 .taskitem h3 {
+  color: inherit;
   font-size: 16px;
 }
 
@@ -226,26 +235,32 @@ footer {
 }
 
 /* ################## # BUTTONS ################## */
-.btn--header {
+.btn__header {
   border-radius: 5px;
   cursor: pointer;
-  transition: box-shadow 0.4s ease-out, transform 0.4s ease-out;
+  transition: box-shadow 0.3s ease-out, transform 0.3s ease-out;
 }
 
 @media (hover: hover) {
-  .btn--header:hover {
+  .btn__header:hover {
     box-shadow: 0 0 5px 0.2px rgba(122, 122, 122, 0.37);
     transform: scale(1.1);
   }
 }
 
+.btn__details {
+  cursor: pointer;
+}
+
 /* ################## # ACTION STATES ################## */
+/* Sidebar */
 .hidden {
   z-index: -1;
   opacity: 0;
   top: -20px;
 }
 
+/* Header Buttons */
 .bar--vanish {
   transform: rotateY(90deg);
 }
@@ -256,4 +271,18 @@ footer {
 
 .bar__mid2--rotate {
   transform: rotate(45deg);
+}
+
+/* Task Buttons */
+.checked {
+  text-decoration: line-through;
+  color: rgb(219, 203, 203);
+}
+
+.btn__details--open {
+  transform: rotate(-90deg);
+}
+
+.btn__details--completed {
+  filter: contrast(1%);
 }
