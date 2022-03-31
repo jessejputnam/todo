@@ -59,19 +59,34 @@ btnListsMenu.addEventListener("click", () => {
 for (let box of checkboxTaskComplete) {
   box.addEventListener("click", (e) => {
     if (e.target.checked === true) {
-      // e.target.classList.add("");
+      // Change task text color / strikethru
+      e.target.parentElement.classList.add("checked");
+      // Change task details button color
+      e.target.parentElement.lastElementChild.firstElementChild.classList.add(
+        "btn__details--completed"
+      );
     }
 
-    console.log(box);
+    if (e.target.checked === false) {
+      e.target.parentElement.classList.remove("checked");
+      e.target.parentElement.lastElementChild.firstElementChild.classList.remove(
+        "btn__details--completed"
+      );
+    }
   });
 }
 
-checkboxTaskComplete;
-// forEach((box) => {
-//   box.addEventListener("mousedown", (e) => {
-//     console.log(e.target);
-//   });
-// });
+for (let btn of btnTaskDetails) {
+  btn.addEventListener("click", (e) => {
+    e.target.classList.contains("btn__details--open")
+      ? e.target.classList.remove("btn__details--open")
+      : e.target.classList.add("btn__details--open");
+
+    for (let button of btnTaskDetails) {
+      if (button !== e.target) button.classList.remove("btn__details--open");
+    }
+  });
+}
 
 //TESTING AREA
 /**
@@ -83,6 +98,8 @@ checkboxTaskComplete;
  *
  *
  */
+
+/*
 // TEST SAMPLES
 // Create Master List
 const masterList = new MasterList();
@@ -110,3 +127,4 @@ masterList.items[0].items[4].toggleCompleted();
 
 masterList.items[0].items[1].togglePriority();
 console.table(masterList.items[0].items);
+*/
