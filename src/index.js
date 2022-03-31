@@ -28,6 +28,9 @@ const listsMenuMidBar2 = document.querySelector(".bar__mid2");
 const checkboxTaskComplete =
   document.getElementsByClassName("taskitem__checkbox");
 const btnTaskDetails = document.getElementsByClassName("btn__details");
+const checkboxPriority = document.getElementsByClassName(
+  "taskitem__priority-check__checkbox"
+);
 
 // -- Windows
 const sidebar = document.querySelector(".sidebar");
@@ -56,6 +59,7 @@ btnListsMenu.addEventListener("click", () => {
 /* ************************************************** */
 //* TASK BUTTONS
 /* ************************************************** */
+// Change completed task checkbox visual
 for (let box of checkboxTaskComplete) {
   box.addEventListener("click", (e) => {
     if (e.target.checked === true) {
@@ -67,6 +71,7 @@ for (let box of checkboxTaskComplete) {
       );
     }
 
+    // Undo Change completed task visual
     if (e.target.checked === false) {
       e.target.parentElement.classList.remove("checked");
       e.target.parentElement.lastElementChild.firstElementChild.classList.remove(
@@ -76,6 +81,7 @@ for (let box of checkboxTaskComplete) {
   });
 }
 
+// Visual for open task details button
 for (let btn of btnTaskDetails) {
   btn.addEventListener("click", (e) => {
     e.target.classList.contains("btn__details--open")
@@ -84,6 +90,31 @@ for (let btn of btnTaskDetails) {
 
     for (let button of btnTaskDetails) {
       if (button !== e.target) button.classList.remove("btn__details--open");
+    }
+  });
+}
+
+// Change priority checkbox visual
+for (let box of checkboxPriority) {
+  box.addEventListener("click", (e) => {
+    if (e.target.checked === true) {
+      // Change text
+      e.target.parentElement.classList.add("taskitem__priority-check--red-txt");
+
+      // Change box border
+      e.target.classList.add("taskitem__priority-check__checkbox--red-border");
+    }
+
+    if (e.target.checked === false) {
+      // Change text
+      e.target.parentElement.classList.remove(
+        "taskitem__priority-check--red-txt"
+      );
+
+      // Change box border
+      e.target.classList.remove(
+        "taskitem__priority-check__checkbox--red-border"
+      );
     }
   });
 }
