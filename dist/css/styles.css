@@ -61,6 +61,7 @@ main {
   align-items: center;
 }
 
+/* Flatten and change checkboxes for all browsers */
 input[type="checkbox"] {
   -webkit-appearance: none;
   appearance: none;
@@ -174,6 +175,8 @@ input[type="checkbox"]:checked::before {
 
 /* ################## # MAIN APP ################## */
 .main-app {
+  width: 100%;
+  max-width: 770px;
   padding: 10px;
   position: relative;
   right: 0;
@@ -188,6 +191,9 @@ input[type="checkbox"]:checked::before {
   box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.37);
   border-radius: 5px;
   max-width: 750px;
+  height: 100%;
+
+  transition: all 1s;
 }
 
 .taskitem__abbr {
@@ -220,6 +226,7 @@ input[type="checkbox"]:checked::before {
 .taskitem__divider {
   width: 96%;
   opacity: 0.1;
+  margin: 0 auto;
 }
 
 .taskitem__details__container {
@@ -281,7 +288,7 @@ input[type="checkbox"]:checked::before {
   -webkit-backdrop-filter: blur(4px);
 
   z-index: 2;
-  transition: opacity 0.2s ease-in, top 0.4s ease-in;
+  transition: opacity 0.2s ease-in, top 0.4s ease-in, z-index 0.7s;
 }
 
 .sidebar__title {
@@ -298,6 +305,45 @@ input[type="checkbox"]:checked::before {
   align-items: center;
   width: 100%;
   padding: 5px 10px;
+}
+
+.listitem__options__container {
+  position: relative;
+}
+
+.listitem__options__menu__container {
+  position: absolute;
+  padding: 0 10px;
+  left: 7px;
+  display: flex;
+  align-items: center;
+  background-image: linear-gradient(to right, #e5bd8fa2, #f9e39ba8);
+  backdrop-filter: blur(3px);
+  justify-content: space-between;
+  width: 100px;
+  height: 60px;
+  box-shadow: 5px 5px 5px 0 rgba(0, 0, 0, 0.5);
+
+  border-left: solid 1px rgba(0, 0, 0, 0.5);
+  border-top: solid 1px rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  border-top-left-radius: 0;
+
+  transition: all 0.3s;
+}
+
+.btn__listitem--up {
+  transform: rotate(90deg);
+}
+
+.btn__listitem--down {
+  transform: rotate(-90deg);
+}
+
+@media (hover: hover) {
+  .btn__listitem:hover {
+    filter: drop-shadow(0 0 5px #ef7a8b);
+  }
 }
 
 .listitem__due-count {
@@ -326,10 +372,19 @@ footer {
 }
 
 /* ################## # BUTTONS ################## */
+.btn {
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out, filter 0.5s, background-color 0.3s,
+    box-shadow 0.3s;
+}
+
 .btn__header {
   border-radius: 5px;
-  cursor: pointer;
-  transition: box-shadow 0.3s ease-out, transform 0.3s ease-out;
+}
+
+.btn__details {
+  padding: 1px;
+  border-radius: 50%;
 }
 
 @media (hover: hover) {
@@ -337,16 +392,31 @@ footer {
     box-shadow: 0 0 5px 0.2px rgba(122, 122, 122, 0.37);
     transform: scale(1.1);
   }
+
+  .btn__details:hover {
+    background-color: rgba(253, 194, 0, 0.26);
+    box-shadow: 0 0 10px 0 rgba(122, 122, 122, 0.37);
+  }
+
+  .btn__taskitem__edit:hover {
+    transform: scale(1.1);
+  }
+
+  .btn__taskitem__delete:hover {
+    transform: scale(1.1);
+  }
 }
 
-.btn__details {
-  cursor: pointer;
-  transition: transform 0.3s ease-in-out;
+@media (hover: hover) {
+  .btn__listitem__options:hover {
+    transform: scale(1.1);
+  }
 }
 
 /* ################## # ACTION STATES ################## */
 /* Sidebar */
 .hidden {
+  z-index: 0;
   opacity: 0;
   top: -20px;
 }

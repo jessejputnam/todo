@@ -17,31 +17,32 @@ import { MasterList } from "./todo-logic.js";
 /* ************************************************** */
 //* DOM VARIABLES
 /* ************************************************** */
-// -- Buttons
-// ---- Header
+// -- BUTTONS
+// #### Header
 const btnListsMenu = document.querySelector(".lists-menu");
 const listsMenuEndBars = document.querySelectorAll(".bar__end");
 const listsMenuMidBar1 = document.querySelector(".bar__mid");
 const listsMenuMidBar2 = document.querySelector(".bar__mid2");
 
-// ---- Tasks
+// #### Tasks
 const checkboxTaskComplete =
   document.getElementsByClassName("taskitem__checkbox");
 const btnTaskDetails = document.getElementsByClassName("btn__details");
 const checkboxPriority = document.getElementsByClassName(
   "taskitem__priority-check__checkbox"
 );
+const btnEditTask = document.getElementsByClassName("btn__taskitem__edit");
+const btnDelTask = document.getElementsByClassName("btn__taskitem__delete");
 
-// -- Windows
+// #### Sidebar
+const btnListsOpts = document.getElementsByClassName("btn__listitem__options");
+
+// -- SIDEBAR
 const sidebar = document.querySelector(".sidebar");
+const listItems = document.getElementsByClassName("sidebar__listitem");
 
-// --
-
-/* ************************************************** */
-//* ON LOAD ACTIONS
-/* ************************************************** */
-
-/* Stops sidebar from popping briefly in view on page load */
+// -- MAIN APP
+const taskItems = document.getElementsByClassName("taskitem");
 
 /* ************************************************** */
 //* HEADER BUTTONS
@@ -84,13 +85,27 @@ for (let box of checkboxTaskComplete) {
 // Visual for open task details button
 for (let btn of btnTaskDetails) {
   btn.addEventListener("click", (e) => {
+    // Toggle task details open on click
     e.target.classList.contains("btn__details--open")
       ? e.target.classList.remove("btn__details--open")
       : e.target.classList.add("btn__details--open");
 
     for (let button of btnTaskDetails) {
-      if (button !== e.target) button.classList.remove("btn__details--open");
+      // Close any task details open to stop multiple at once
+      if (button !== e.target) {
+        button.classList.remove("btn__details--open");
+
+        if (
+          button.parentElement.parentElement.parentElement.children.length === 2
+        )
+          hideTaskDetails(button.parentElement.parentElement.parentElement);
+      }
     }
+
+    if (e.target.classList.contains("btn__details--open"))
+      expandTaskitem(e.target.parentElement.parentElement.parentElement);
+    if (!e.target.classList.contains("btn__details--open"))
+      hideTaskDetails(e.target.parentElement.parentElement.parentElement);
   });
 }
 
@@ -118,6 +133,61 @@ for (let box of checkboxPriority) {
     }
   });
 }
+
+const expandTaskitem = function (el, priority, desc) {
+  const html = `
+    <div class="taskitem--expanded">
+      <hr class="taskitem__divider" />
+
+      <div class="taskitem__details__container">
+        <div class="taskitem__details__txt-container">
+          <p>
+            I have to forgive myself for the trespasses of the past and move
+            to the promise of the future lest I have trouble climbing back
+            up <i>de profundis</i>
+          </p>
+        </div>
+
+        <div class="taskitem__details__actions-container">
+          <label class="taskitem__priority-check">
+            Priority
+            <input
+              type="checkbox"
+              name="priority__checkbox"
+              class="taskitem__priority-check__checkbox"
+            />
+          </label>
+          <div class="taskitem__edit__container">
+            <img
+              src="./images/edit.svg"
+              height="22px"
+              alt="Edit task"
+              title="Edit task"
+              class="btn btn__taskitem__edit"
+            />
+          </div>
+          <div class="taskitem__del__container">
+            <img
+              src="./images/trash.svg"
+              height="25px"
+              alt="Delete task"
+              title="Delete task"
+              class="btn btn__taskitem__delete"
+            />
+          </div>
+        </div>
+        <!-- end taskitem__details__actions-container -->
+      </div>
+      <!-- end taskitem__details__container -->
+    </div>
+  `;
+
+  el.insertAdjacentHTML("beforeend", html);
+};
+
+const hideTaskDetails = function (el) {
+  el.removeChild(el.lastElementChild);
+};
 
 //TESTING AREA
 /**
