@@ -40,6 +40,9 @@ const btnListsOpts = document.getElementsByClassName("btn__listitem__options");
 // -- SIDEBAR
 const sidebar = document.querySelector(".sidebar");
 const listItems = document.getElementsByClassName("sidebar__listitem");
+const listItemsOptionsMenu = document.getElementsByClassName(
+  "listitem__options__menu__container"
+);
 
 // -- MAIN APP
 const taskItems = document.getElementsByClassName("taskitem");
@@ -61,78 +64,106 @@ btnListsMenu.addEventListener("click", () => {
 //* TASK BUTTONS
 /* ************************************************** */
 // Change completed task checkbox visual
-for (let box of checkboxTaskComplete) {
-  box.addEventListener("click", (e) => {
-    if (e.target.checked === true) {
-      // Change task text color / strikethru
-      e.target.parentElement.classList.add("checked");
-      // Change task details button color
-      e.target.parentElement.lastElementChild.firstElementChild.classList.add(
-        "btn__details--completed"
-      );
-    }
+document.addEventListener("click", (e) => {
+  const clicked = e.target.closest(".taskitem__checkbox");
+  if (!clicked) return;
 
-    // Undo Change completed task visual
-    if (e.target.checked === false) {
-      e.target.parentElement.classList.remove("checked");
-      e.target.parentElement.lastElementChild.firstElementChild.classList.remove(
-        "btn__details--completed"
-      );
-    }
-  });
-}
+  if (clicked.checked) {
+    // Change task text color / strikethru
+    clicked.parentElement.classList.add("checked");
+
+    // Change task details button color
+    clicked.parentElement.lastElementChild.firstElementChild.classList.add(
+      "btn__details--completed"
+    );
+
+    // Change task item filter
+    clicked.parentElement.parentElement.classList.add("completed--true");
+  }
+
+  // Undo Change completed task visual
+  if (!clicked.checked) {
+    clicked.parentElement.classList.remove("checked");
+    clicked.parentElement.lastElementChild.firstElementChild.classList.remove(
+      "btn__details--completed"
+    );
+    clicked.parentElement.parentElement.classList.remove("completed--true");
+  }
+});
 
 // Visual for open task details button
-for (let btn of btnTaskDetails) {
-  btn.addEventListener("click", (e) => {
-    // Toggle task details open on click
-    e.target.classList.contains("btn__details--open")
-      ? e.target.classList.remove("btn__details--open")
-      : e.target.classList.add("btn__details--open");
+document.addEventListener("click", (e) => {
+  const clicked = e.target.closest(".btn__details");
 
-    for (let button of btnTaskDetails) {
-      // Close any task details open to stop multiple at once
-      if (button !== e.target) {
-        button.classList.remove("btn__details--open");
+  if (!clicked) return;
 
-        if (
-          button.parentElement.parentElement.parentElement.children.length === 2
-        )
-          hideTaskDetails(button.parentElement.parentElement.parentElement);
-      }
+  // Toggle task details open on click
+  clicked.classList.contains("btn__details--open")
+    ? clicked.classList.remove("btn__details--open")
+    : clicked.classList.add("btn__details--open");
+
+  const buttons = document.querySelectorAll(".btn__details");
+
+  for (let button of buttons) {
+    // Close any task details open to stop multiple at once
+    if (button !== e.target) {
+      button.classList.remove("btn__details--open");
+
+      if (
+        button.parentElement.parentElement.parentElement.children.length === 2
+      )
+        hideTaskDetails(button.parentElement.parentElement.parentElement);
     }
+  }
 
-    if (e.target.classList.contains("btn__details--open"))
-      expandTaskitem(e.target.parentElement.parentElement.parentElement);
-    if (!e.target.classList.contains("btn__details--open"))
-      hideTaskDetails(e.target.parentElement.parentElement.parentElement);
-  });
-}
+  if (clicked.classList.contains("btn__details--open"))
+    expandTaskitem(clicked.parentElement.parentElement.parentElement);
+  if (!clicked.classList.contains("btn__details--open"))
+    hideTaskDetails(clicked.parentElement.parentElement.parentElement);
+});
 
 // Change priority checkbox visual
-for (let box of checkboxPriority) {
-  box.addEventListener("click", (e) => {
-    if (e.target.checked === true) {
-      // Change text
-      e.target.parentElement.classList.add("taskitem__priority-check--red-txt");
+document.addEventListener("click", (e) => {
+  const clicked = e.target.closest(".taskitem__priority-check__checkbox");
 
-      // Change box border
-      e.target.classList.add("taskitem__priority-check__checkbox--red-border");
-    }
+  if (!clicked) return;
 
-    if (e.target.checked === false) {
-      // Change text
-      e.target.parentElement.classList.remove(
-        "taskitem__priority-check--red-txt"
-      );
+  if (clicked.checked) {
+    // Change box border
+    e.target.classList.add("taskitem__priority-check__checkbox--red-border");
 
-      // Change box border
-      e.target.classList.remove(
-        "taskitem__priority-check__checkbox--red-border"
-      );
-    }
-  });
-}
+    // Change background color of task
+    clicked.parentElement.parentElement.parentElement.parentElement.parentElement.classList.add(
+      "priority--true"
+    );
+  }
+
+  if (!clicked.checked) {
+    // Change text
+    e.target.parentElement.classList.remove(
+      "taskitem__priority-check--red-txt"
+    );
+
+    // Change box border
+    e.target.classList.remove("taskitem__priority-check__checkbox--red-border");
+
+    // Change background color back
+    clicked.parentElement.parentElement.parentElement.parentElement.parentElement.classList.remove(
+      "priority--true"
+    );
+  }
+});
+
+/* ************************************************** */
+//* SIDEBAR BUTTONS
+/* ************************************************** */
+// Sidebar lists options
+document.addEventListener("click", (e) => {
+  const clicked = e.target.closest(".btn__listitem__options");
+  if (!clicked) return;
+
+  clicked.parentElement.lastElementChild.classList.toggle("hidden");
+});
 
 const expandTaskitem = function (el, priority, desc) {
   const html = `

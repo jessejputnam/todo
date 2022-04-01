@@ -50,7 +50,7 @@
     </header>
 
     <section class="sidebar__container">
-      <div class="sidebar">
+      <div class="sidebar hidden">
         <h2 class="sidebar__title">My Lists</h2>
         <div class="sidebar__listitem">
           <div class="listitem__options__container">
@@ -59,21 +59,22 @@
               height="20px"
               class="btn btn__listitem__options"
             />
-            <div class="listitem__options__menu__container">
+            <div class="listitem__options__menu__container hidden">
+              <div class="arrow-up"></div>
               <img
                 src="./images/trash.svg"
                 class="btn btn__listitem btn__listitem--del"
-                height="20px"
+                height="28px"
               />
               <img
                 src="./images/down-triangle.png"
                 class="btn btn__listitem btn__listitem--up"
-                height="20px"
+                height="28px"
               />
               <img
                 src="./images/down-triangle.png"
                 class="btn btn__listitem btn__listitem--down"
-                height="20px"
+                height="28px"
               />
             </div>
             <!-- end listitem__options__menu__container -->
@@ -86,11 +87,32 @@
         </div>
 
         <div class="sidebar__listitem">
-          <img
-            src="./images/lists-menu.png"
-            height="20px"
-            class="btn btn__listitem__options"
-          />
+          <div class="listitem__options__container">
+            <img
+              src="./images/lists-menu.png"
+              height="20px"
+              class="btn btn__listitem__options"
+            />
+            <div class="listitem__options__menu__container hidden">
+              <div class="arrow-up"></div>
+              <img
+                src="./images/trash.svg"
+                class="btn btn__listitem btn__listitem--del"
+                height="28px"
+              />
+              <img
+                src="./images/down-triangle.png"
+                class="btn btn__listitem btn__listitem--up"
+                height="28px"
+              />
+              <img
+                src="./images/down-triangle.png"
+                class="btn btn__listitem btn__listitem--down"
+                height="28px"
+              />
+            </div>
+            <!-- end listitem__options__menu__container -->
+          </div>
           <div class="listitem__title">Default List</div>
           <div class="listitem__due-count">
             <div class="listitem__due-count__title">Tasks Due:</div>
@@ -149,7 +171,40 @@
           </div>
         </div>
       </section>
+
+      <div class="form">
+        <div class="form__row">
+          <label class="form__label">Task: </label>
+          <input
+            type="text"
+            placeholder="pick up... / call... / email..."
+            class="form__text form__text--title"
+          />
+        </div>
+
+        <div class="form__row">
+          <label class="form__label">Due by: </label>
+          <input type="date" class="form__date" />
+        </div>
+
+        <div class="form__row">
+          <label class="form__label">Description: </label>
+          <textarea
+            placeholder="(Optional)"
+            class="form__text form__text-area"
+          ></textarea>
+        </div>
+
+        <div class="form__row">
+          <div class="form__priority__container">
+            <label class="form__label">Priority: </label>
+            <input type="checkbox" class="form__priority" />
+          </div>
+          <button type="button" class="btn btn__form__submit">Add Task</button>
+        </div>
+      </div>
     </main>
+
     <footer></footer>
   </body>
 </html>
