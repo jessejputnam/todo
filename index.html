@@ -50,14 +50,34 @@
     </header>
 
     <section class="sidebar__container">
-      <div class="sidebar hidden">
+      <div class="sidebar">
         <h2 class="sidebar__title">My Lists</h2>
         <div class="sidebar__listitem">
-          <img
-            src="./images/lists-menu.png"
-            height="20px"
-            class="listitem__options"
-          />
+          <div class="listitem__options__container">
+            <img
+              src="./images/lists-menu.png"
+              height="20px"
+              class="btn btn__listitem__options"
+            />
+            <div class="listitem__options__menu__container">
+              <img
+                src="./images/trash.svg"
+                class="btn btn__listitem btn__listitem--del"
+                height="20px"
+              />
+              <img
+                src="./images/down-triangle.png"
+                class="btn btn__listitem btn__listitem--up"
+                height="20px"
+              />
+              <img
+                src="./images/down-triangle.png"
+                class="btn btn__listitem btn__listitem--down"
+                height="20px"
+              />
+            </div>
+            <!-- end listitem__options__menu__container -->
+          </div>
           <div class="listitem__title">Default List</div>
           <div class="listitem__due-count">
             <div class="listitem__due-count__title">Tasks Due:</div>
@@ -69,7 +89,7 @@
           <img
             src="./images/lists-menu.png"
             height="20px"
-            class="listitem__options"
+            class="btn btn__listitem__options"
           />
           <div class="listitem__title">Default List</div>
           <div class="listitem__due-count">
@@ -91,8 +111,8 @@
               class="taskitem__checkbox"
             />
             <div class="taskitem__txtbox">
-              <h3>Task Item</h3>
-              <p>due in 3 days</p>
+              <h3>Task Item 1</h3>
+              <p>due in 5 days</p>
             </div>
             <div class="taskitem__btn-details__container">
               <img
@@ -104,8 +124,39 @@
               />
             </div>
           </div>
+        </div>
 
-          <hr class="taskitem__divider" />
+        <div class="taskitem">
+          <div class="taskitem__abbr">
+            <input
+              type="checkbox"
+              name="completed-checkbox"
+              class="taskitem__checkbox"
+            />
+            <div class="taskitem__txtbox">
+              <h3>Task Item 2</h3>
+              <p>due in 3 days</p>
+            </div>
+            <div class="taskitem__details">
+              <img
+                src="./images/down-triangle.png"
+                alt="Open details"
+                title="Details"
+                height="20px"
+                class="btn btn__details"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer></footer>
+  </body>
+</html>
+
+<!-- 
+
+  <hr class="taskitem__divider" />
 
           <div class="taskitem__details__container">
             <div class="taskitem__details__txt-container">
@@ -144,32 +195,5 @@
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="taskitem">
-          <div class="taskitem__abbr">
-            <input
-              type="checkbox"
-              name="completed-checkbox"
-              class="taskitem__checkbox"
-            />
-            <div class="taskitem__txtbox">
-              <h3>Task Item</h3>
-              <p>due in 3 days</p>
-            </div>
-            <div class="taskitem__details">
-              <img
-                src="./images/down-triangle.png"
-                alt="Open details"
-                title="Details"
-                height="20px"
-                class="btn btn__details"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-    <footer></footer>
-  </body>
-</html>
+ -->
