@@ -33,6 +33,9 @@ import {
   openAddTask,
   clearForm,
   hideSidebarListOptions,
+  addListItem,
+  updateActiveListUI,
+  toggleSidebarNewListTitle,
 } from "./visual.js";
 
 /* ************************************************** */
@@ -57,6 +60,7 @@ const btnEditTask = document.getElementsByClassName("btn__taskitem__edit");
 const btnDelTask = document.getElementsByClassName("btn__taskitem__delete");
 
 // ---- Sidebar
+const btnAddList = document.querySelector(".btn__sidebar__add-list");
 const btnListsOpts = document.getElementsByClassName("btn__listitem__options");
 
 // ---- Form
@@ -65,6 +69,10 @@ const btnFormSubmit = document.querySelector(".btn__form-submit");
 
 // SIDEBAR
 const sidebar = document.querySelector(".sidebar");
+const sidebarHeader = document.querySelector(".sidebar__header");
+const sidebarAddListTitle = document.querySelector(
+  ".sidebar__add-list__add-title__container"
+);
 const listItems = document.getElementsByClassName("sidebar__listitem");
 const listItemsOptionsMenu = document.getElementsByClassName(
   "listitem__options__menu__container"
@@ -79,6 +87,7 @@ const formPriority = document.querySelector(".form__priority__checkbox");
 
 // -- MAIN APP
 const activeListWindow = document.querySelector(".main-app");
+const activeListTitle = document.querySelector(".active-list__title");
 const taskItems = document.getElementsByClassName("taskitem");
 
 /* ************************************************** */
@@ -148,6 +157,12 @@ activeListWindow.addEventListener("click", (e) => {
 //* SIDEBAR BUTTONS
 /* ************************************************** */
 // Sidebar lists options
+btnAddList.addEventListener("click", (e) => {
+  // if ()
+  toggleSidebarNewListTitle(sidebarAddListTitle);
+  // addListItem(sidebarHeader, "Main List", 0);
+});
+
 sidebar.addEventListener("click", (e) => {
   const clicked = e.target.closest(".btn__listitem__options");
   if (!clicked) return;
@@ -182,11 +197,18 @@ btnFormSubmit.addEventListener("click", () => {
 /* ************************************************** */
 //* APP LOGIC
 /* ************************************************** */
+// Initialize Master List
 const masterList = new MasterList();
 
+// Add Default List to Master List
 masterList.addItem("Main List");
 
-console.log(masterList);
+// Add Default list to sidebar
+addListItem(sidebarHeader, masterList.items[0].title, 0);
+
+// Update activeList visual
+let activeList = masterList.items[0];
+updateActiveListUI(activeListTitle, activeList.title);
 
 //TESTING AREA
 /**

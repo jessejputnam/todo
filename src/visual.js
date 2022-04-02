@@ -1,4 +1,17 @@
 "use strict";
+
+/**
+ * TABLE OF CONTENTS
+ 
+ * Dry Functions
+ * Header Buttons
+ * Task Buttons
+ * Sidebar Buttons
+ * Active Task List
+ * HTML Inserts
+ 
+ **/
+
 /* ************************************************** */
 //* DRY FUNCTIONS
 /* ************************************************** */
@@ -125,8 +138,20 @@ const hideSidebarListOptions = function (clicked) {
   clicked.parentElement.classList.add("hidden");
 };
 
+const toggleSidebarNewListTitle = function (el) {
+  el.classList.toggle("add__list-title--visible");
+};
+
 /* ************************************************** */
-//* FORM BUTTONS
+//* Active Task List
+/* ************************************************** */
+
+const updateActiveListUI = function (listNameEl, listName) {
+  listNameEl.textContent = listName;
+};
+
+/* ************************************************** */
+//* HTML Inserts
 /* ************************************************** */
 const expandTaskitem = function (el, priority, desc) {
   const htmlTaskDetails = `
@@ -208,41 +233,45 @@ const htmlTaskItem = `
   </div>
 `;
 
-const htmlListItem = `
-  <div class="sidebar__listitem">
-    <div class="listitem__options__container">
-      <img
-        src="./images/lists-menu.png"
-        height="20px"
-        class="btn btn__listitem__options"
-      />
-      <div class="listitem__options__menu__container hidden">
-        <div class="arrow-up"></div>
+const addListItem = function (el, title, numDue) {
+  const htmlListItem = `
+    <div class="sidebar__listitem">
+      <div class="listitem__options__container">
         <img
-          src="./images/trash.svg"
-          class="btn btn__listitem btn__listitem--del"
-          height="28px"
+          src="./images/lists-menu.png"
+          height="20px"
+          class="btn btn__listitem__options"
         />
-        <img
-          src="./images/down-triangle.png"
-          class="btn btn__listitem btn__listitem--up"
-          height="28px"
-        />
-        <img
-          src="./images/down-triangle.png"
-          class="btn btn__listitem btn__listitem--down"
-          height="28px"
-        />
+        <div class="listitem__options__menu__container hidden">
+          <div class="arrow-up"></div>
+          <img
+            src="./images/trash.svg"
+            class="btn btn__listitem btn__listitem--del"
+            height="28px"
+          />
+          <img
+            src="./images/down-triangle.png"
+            class="btn btn__listitem btn__listitem--up"
+            height="28px"
+          />
+          <img
+            src="./images/down-triangle.png"
+            class="btn btn__listitem btn__listitem--down"
+            height="28px"
+          />
+        </div>
+        <!-- end listitem__options__menu__container -->
       </div>
-      <!-- end listitem__options__menu__container -->
+      <div class="listitem__title">${title}</div>
+      <div class="listitem__due-count">
+        <div class="listitem__due-count__title">Tasks Due:</div>
+        <div class="listitem__due-count__count">${numDue}</div>
+      </div>
     </div>
-    <div class="listitem__title">Default List</div>
-    <div class="listitem__due-count">
-      <div class="listitem__due-count__title">Tasks Due:</div>
-      <div class="listitem__due-count__count">10</div>
-    </div>
-  </div>
-`;
+  `;
+
+  el.insertAdjacentHTML("afterend", htmlListItem);
+};
 
 export {
   clearForm,
@@ -258,4 +287,7 @@ export {
   removePriorityVisual,
   toggleSidebarListOptions,
   hideSidebarListOptions,
+  addListItem,
+  updateActiveListUI,
+  toggleSidebarNewListTitle,
 };
