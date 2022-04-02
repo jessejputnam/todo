@@ -20,7 +20,6 @@ TABLE OF CONTENTS:
 # Main App
 # Sidebar
 # Form
-# Footer
 # Buttons
 
 */
@@ -305,6 +304,36 @@ input[type="checkbox"]:checked::before {
   margin-left: 10px;
 }
 
+.sidebar__add-list__add-title__container {
+  width: 25px;
+  position: relative;
+  opacity: 0;
+
+  transition: width 1s, opacity 0.5s;
+}
+
+.sidebar__add-list__add-title {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  outline: none;
+  height: 25px;
+}
+
+#add-list__title {
+  position: absolute;
+  line-height: 22px;
+  right: 2px;
+  border: solid 0.5px rgba(63, 63, 63, 0.692);
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  top: 0;
+  color: white;
+  height: 25px;
+  background-color: #1e90ff;
+  transform: translateX(2px);
+}
+
 .sidebar__listitem {
   margin-top: 10px;
   border-radius: 7.5px;
@@ -444,16 +473,6 @@ input[type="checkbox"]:checked::before {
   transition: all 0.3s;
 }
 
-/* ################## # FOOTER ################## */
-footer {
-  font-size: 10px;
-  background-color: #f9ea98af;
-  width: 100vw;
-  height: 50px;
-  position: absolute;
-  bottom: 0;
-}
-
 /* ################## # BUTTONS ################## */
 .btn {
   cursor: pointer;
@@ -471,7 +490,7 @@ footer {
 }
 
 .btn__sidebar__add-list {
-  margin-right: 20px;
+  margin-right: 15px;
 }
 
 .btn__listitem {
@@ -495,6 +514,10 @@ footer {
   top: -20px;
 
   transition: z-index 0.7s;
+}
+
+.active-list {
+  border: ridge 4px #57d6c973;
 }
 
 /* Header Buttons */
@@ -542,6 +565,11 @@ footer {
   color: rgb(155, 155, 155);
 }
 
+.add__list-title--visible {
+  width: 180px;
+  opacity: 1;
+}
+
 /* ################## # MEDIA QUERIES ################## */
 @media only screen and (min-width: 640px) {
   .form {
@@ -585,5 +613,9 @@ footer {
   .btn__form-close:hover {
     transform: scale(1.05);
     filter: drop-shadow(0 0 5px rgba(252, 50, 50, 0.589));
+  }
+
+  #add-list__title:hover {
+    filter: brightness(130%);
   }
 }
