@@ -88,7 +88,41 @@
             </div>
             <!-- end listitem__options__menu__container -->
           </div>
-          <div class="listitem__title">Main List</div>
+          <div class="listitem__title">Default List</div>
+          <div class="listitem__due-count">
+            <div class="listitem__due-count__title">Tasks Due:</div>
+            <div class="listitem__due-count__count">10</div>
+          </div>
+        </div>
+
+        <div class="sidebar__listitem">
+          <div class="listitem__options__container">
+            <img
+              src="./images/lists-menu.png"
+              height="20px"
+              class="btn btn__listitem__options"
+            />
+            <div class="listitem__options__menu__container hidden">
+              <div class="arrow-up"></div>
+              <img
+                src="./images/trash.svg"
+                class="btn btn__listitem btn__listitem--del"
+                height="28px"
+              />
+              <img
+                src="./images/down-triangle.png"
+                class="btn btn__listitem btn__listitem--up"
+                height="28px"
+              />
+              <img
+                src="./images/down-triangle.png"
+                class="btn btn__listitem btn__listitem--down"
+                height="28px"
+              />
+            </div>
+            <!-- end listitem__options__menu__container -->
+          </div>
+          <div class="listitem__title">Default List</div>
           <div class="listitem__due-count">
             <div class="listitem__due-count__title">Tasks Due:</div>
             <div class="listitem__due-count__count">10</div>
@@ -99,7 +133,52 @@
 
     <main>
       <section class="main-app">
-        <h2 class="active-list__title">Default List</h2>
+        <h2>Default List</h2>
+        <div class="taskitem">
+          <div class="taskitem__abbr">
+            <input
+              type="checkbox"
+              name="completed-checkbox"
+              class="taskitem__checkbox"
+            />
+            <div class="taskitem__txtbox">
+              <h3>Task Item 1</h3>
+              <p>due in 5 days</p>
+            </div>
+            <div class="taskitem__btn-details__container">
+              <img
+                src="./images/down-triangle.png"
+                alt="Open details"
+                title="Details"
+                height="20px"
+                class="btn btn__details"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="taskitem">
+          <div class="taskitem__abbr">
+            <input
+              type="checkbox"
+              name="completed-checkbox"
+              class="taskitem__checkbox"
+            />
+            <div class="taskitem__txtbox">
+              <h3>Task Item 2</h3>
+              <p>due in 3 days</p>
+            </div>
+            <div class="taskitem__details">
+              <img
+                src="./images/down-triangle.png"
+                alt="Open details"
+                title="Details"
+                height="20px"
+                class="btn btn__details"
+              />
+            </div>
+          </div>
+        </div>
       </section>
 
       <div class="form hidden">
@@ -145,3 +224,47 @@
     <footer></footer>
   </body>
 </html>
+
+<!-- 
+
+  <hr class="taskitem__divider" />
+
+          <div class="taskitem__details__container">
+            <div class="taskitem__details__txt-container">
+              <p>
+                I have to forgive myself for the trespasses of the past and move
+                to the promise of the future lest I have trouble climbing back
+                up <i>de profundis</i>
+              </p>
+            </div>
+            <div class="taskitem__details__actions-container">
+              <label class="taskitem__priority-check">
+                Priority
+                <input
+                  type="checkbox"
+                  name="priority__checkbox"
+                  class="taskitem__priority-check__checkbox"
+                />
+              </label>
+              <div class="taskitem__edit__container">
+                <img
+                  src="./images/edit.svg"
+                  height="22px"
+                  alt="Edit task"
+                  title="Edit task"
+                  class="btn btn__taskitem__edit"
+                />
+              </div>
+              <div class="taskitem__del__container">
+                <img
+                  src="./images/trash.svg"
+                  height="25px"
+                  alt="Delete task"
+                  title="Delete task"
+                  class="btn btn__taskitem__delete"
+                />
+              </div>
+            </div>
+          </div>
+
+ -->

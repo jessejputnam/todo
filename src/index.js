@@ -1,31 +1,52 @@
 "use strict";
 
 /**
+ 
  TABLE OF CONTENTS
+
  * Modules
  * DOM Variables
- * On Load Actions
+ * DRY Functions
  * Header Buttons
- * 
-*/
+ * Task Buttons
+ * Sidebar Buttons
+ * Form Buttons
+ * App Logic
+
+**/
 
 /* ************************************************** */
 //* MODULES
 /* ************************************************** */
 import { MasterList } from "./todo-logic.js";
+import {
+  addPriorityVisual,
+  dimCompletedTasks,
+  expandSelectedDetails,
+  hideNonSelectedDetails,
+  removePriorityVisual,
+  toggleInactiveDetailsBtns,
+  toggleSidebar,
+  toggleSidebarListOptions,
+  toggleTaskDetailsBtn,
+  undoCompletedDim,
+  openAddTask,
+  clearForm,
+  hideSidebarListOptions,
+} from "./visual.js";
 
 /* ************************************************** */
 //* DOM VARIABLES
 /* ************************************************** */
-// -- BUTTONS
-// #### Header
+// BUTTONS
+// ---- Header
 const btnListsMenu = document.querySelector(".lists-menu");
 const listsMenuEndBars = document.querySelectorAll(".bar__end");
 const listsMenuMidBar1 = document.querySelector(".bar__mid");
 const listsMenuMidBar2 = document.querySelector(".bar__mid2");
 const btnAddTask = document.querySelector(".add-task");
 
-// #### Tasks
+// ---- Tasks
 const checkboxTaskComplete =
   document.getElementsByClassName("taskitem__checkbox");
 const btnTaskDetails = document.getElementsByClassName("btn__details");
@@ -35,127 +56,91 @@ const checkboxPriority = document.getElementsByClassName(
 const btnEditTask = document.getElementsByClassName("btn__taskitem__edit");
 const btnDelTask = document.getElementsByClassName("btn__taskitem__delete");
 
-// #### Sidebar
+// ---- Sidebar
 const btnListsOpts = document.getElementsByClassName("btn__listitem__options");
 
-// -- SIDEBAR
+// ---- Form
+const btnFormClose = document.querySelector(".btn__form-close");
+const btnFormSubmit = document.querySelector(".btn__form-submit");
+
+// SIDEBAR
 const sidebar = document.querySelector(".sidebar");
 const listItems = document.getElementsByClassName("sidebar__listitem");
 const listItemsOptionsMenu = document.getElementsByClassName(
   "listitem__options__menu__container"
 );
 
+// FORM
+const form = document.querySelector(".form");
+const formTask = document.querySelector(".form__text--title");
+const formDue = document.querySelector(".form__date");
+const formDesc = document.querySelector(".form__text-area");
+const formPriority = document.querySelector(".form__priority__checkbox");
+
 // -- MAIN APP
+const activeListWindow = document.querySelector(".main-app");
 const taskItems = document.getElementsByClassName("taskitem");
+
+/* ************************************************** */
+//* DRY FUNCTIONS
+/* ************************************************** */
 
 /* ************************************************** */
 //* HEADER BUTTONS
 /* ************************************************** */
-// SIDEBAR OPEN
+// SIDEBAR TOGGLE
 btnListsMenu.addEventListener("click", () => {
-  // Reveal side bar
-  sidebar.classList.toggle("hidden");
-
-  // Tranform close button
-  listsMenuEndBars.forEach((bar) => bar.classList.toggle("bar--vanish"));
-  listsMenuMidBar1.classList.toggle("bar__mid--rotate");
-  listsMenuMidBar2.classList.toggle("bar__mid2--rotate");
+  toggleSidebar(sidebar, listsMenuEndBars, listsMenuMidBar1, listsMenuMidBar2);
 });
 
 // ADD TASK OPEN
-btnAddTask.addEventListener("click", () => {});
+btnAddTask.addEventListener("click", () => {
+  openAddTask(form);
+});
 
 /* ************************************************** */
 //* TASK BUTTONS
 /* ************************************************** */
 // Change completed task checkbox visual
-document.addEventListener("click", (e) => {
+activeListWindow.addEventListener("click", (e) => {
   const clicked = e.target.closest(".taskitem__checkbox");
   if (!clicked) return;
 
   if (clicked.checked) {
-    // Change task text color / strikethru
-    clicked.parentElement.classList.add("checked");
-
-    // Change task details button color
-    clicked.parentElement.lastElementChild.firstElementChild.classList.add(
-      "btn__details--completed"
-    );
-
-    // Change task item filter
-    clicked.parentElement.parentElement.classList.add("completed--true");
+    dimCompletedTasks(clicked);
   }
 
   // Undo Change completed task visual
   if (!clicked.checked) {
-    clicked.parentElement.classList.remove("checked");
-    clicked.parentElement.lastElementChild.firstElementChild.classList.remove(
-      "btn__details--completed"
-    );
-    clicked.parentElement.parentElement.classList.remove("completed--true");
+    undoCompletedDim(clicked);
   }
 });
 
 // Visual for open task details button
-document.addEventListener("click", (e) => {
+activeListWindow.addEventListener("click", (e) => {
   const clicked = e.target.closest(".btn__details");
 
   if (!clicked) return;
 
   // Toggle task details open on click
-  clicked.classList.contains("btn__details--open")
-    ? clicked.classList.remove("btn__details--open")
-    : clicked.classList.add("btn__details--open");
-
-  const buttons = document.querySelectorAll(".btn__details");
-
-  for (let button of buttons) {
-    // Close any task details open to stop multiple at once
-    if (button !== e.target) {
-      button.classList.remove("btn__details--open");
-
-      if (
-        button.parentElement.parentElement.parentElement.children.length === 2
-      )
-        hideTaskDetails(button.parentElement.parentElement.parentElement);
-    }
-  }
-
-  if (clicked.classList.contains("btn__details--open"))
-    expandTaskitem(clicked.parentElement.parentElement.parentElement);
-  if (!clicked.classList.contains("btn__details--open"))
-    hideTaskDetails(clicked.parentElement.parentElement.parentElement);
+  toggleTaskDetailsBtn(clicked);
+  toggleInactiveDetailsBtns(e);
+  expandSelectedDetails(clicked);
+  hideNonSelectedDetails(clicked);
 });
 
 // Change priority checkbox visual
-document.addEventListener("click", (e) => {
+activeListWindow.addEventListener("click", (e) => {
   const clicked = e.target.closest(".taskitem__priority-check__checkbox");
 
   if (!clicked) return;
 
   if (clicked.checked) {
-    // Change box border
-    e.target.classList.add("taskitem__priority-check__checkbox--red-border");
-
-    // Change background color of task
-    clicked.parentElement.parentElement.parentElement.parentElement.parentElement.classList.add(
-      "priority--true"
-    );
+    addPriorityVisual(e, clicked);
   }
 
   if (!clicked.checked) {
-    // Change text
-    e.target.parentElement.classList.remove(
-      "taskitem__priority-check--red-txt"
-    );
-
-    // Change box border
-    e.target.classList.remove("taskitem__priority-check__checkbox--red-border");
-
-    // Change background color back
-    clicked.parentElement.parentElement.parentElement.parentElement.parentElement.classList.remove(
-      "priority--true"
-    );
+    removePriorityVisual(e, clicked);
   }
 });
 
@@ -163,67 +148,45 @@ document.addEventListener("click", (e) => {
 //* SIDEBAR BUTTONS
 /* ************************************************** */
 // Sidebar lists options
-document.addEventListener("click", (e) => {
+sidebar.addEventListener("click", (e) => {
   const clicked = e.target.closest(".btn__listitem__options");
   if (!clicked) return;
 
-  clicked.parentElement.lastElementChild.classList.toggle("hidden");
+  toggleSidebarListOptions(clicked);
 });
 
-const expandTaskitem = function (el, priority, desc) {
-  const html = `
-    <div class="taskitem--expanded">
-      <hr class="taskitem__divider" />
+sidebar.addEventListener("click", (e) => {
+  const clickedTrash = e.target.closest(".btn__listitem--del");
+  const clickedArrowUp = e.target.closest(".btn__listitem--up");
+  const clickedArrowDown = e.target.closest(".btn__listitem--down");
 
-      <div class="taskitem__details__container">
-        <div class="taskitem__details__txt-container">
-          <p>
-            I have to forgive myself for the trespasses of the past and move
-            to the promise of the future lest I have trouble climbing back
-            up <i>de profundis</i>
-          </p>
-        </div>
+  if (!clickedTrash && !clickedArrowUp && !clickedArrowDown) return;
 
-        <div class="taskitem__details__actions-container">
-          <label class="taskitem__priority-check">
-            Priority
-            <input
-              type="checkbox"
-              name="priority__checkbox"
-              class="taskitem__priority-check__checkbox"
-            />
-          </label>
-          <div class="taskitem__edit__container">
-            <img
-              src="./images/edit.svg"
-              height="22px"
-              alt="Edit task"
-              title="Edit task"
-              class="btn btn__taskitem__edit"
-            />
-          </div>
-          <div class="taskitem__del__container">
-            <img
-              src="./images/trash.svg"
-              height="25px"
-              alt="Delete task"
-              title="Delete task"
-              class="btn btn__taskitem__delete"
-            />
-          </div>
-        </div>
-        <!-- end taskitem__details__actions-container -->
-      </div>
-      <!-- end taskitem__details__container -->
-    </div>
-  `;
+  if (clickedTrash || clickedArrowUp || clickedArrowDown) {
+    const clicked = clickedTrash || clickedArrowUp || clickedArrowDown;
+    hideSidebarListOptions(clicked);
+  }
+});
 
-  el.insertAdjacentHTML("beforeend", html);
-};
+/* ************************************************** */
+//* FORM BUTTONS
+/* ************************************************** */
+btnFormClose.addEventListener("click", () => {
+  clearForm(form, formTask, formDue, formDesc, formPriority);
+});
 
-const hideTaskDetails = function (el) {
-  el.removeChild(el.lastElementChild);
-};
+btnFormSubmit.addEventListener("click", () => {
+  clearForm(form, formTask, formDue, formDesc, formPriority);
+});
+
+/* ************************************************** */
+//* APP LOGIC
+/* ************************************************** */
+const masterList = new MasterList();
+
+masterList.addItem("Main List");
+
+console.log(masterList);
 
 //TESTING AREA
 /**
