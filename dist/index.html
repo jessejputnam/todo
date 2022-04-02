@@ -173,11 +173,18 @@
       </section>
 
       <div class="form">
-        <div class="form__row">
+        <img
+          src="./images/cross-circle.svg"
+          height="24px"
+          alt="Close"
+          title="Close"
+          class="btn btn__form-close"
+        />
+        <div class="form__row form__row--top">
           <label class="form__label">Task: </label>
           <input
             type="text"
-            placeholder="pick up... / call... / email..."
+            placeholder="I need to..."
             class="form__text form__text--title"
           />
         </div>
@@ -190,7 +197,7 @@
         <div class="form__row">
           <label class="form__label">Description: </label>
           <textarea
-            placeholder="(Optional)"
+            placeholder="Make sure that..."
             class="form__text form__text-area"
           ></textarea>
         </div>
@@ -198,9 +205,9 @@
         <div class="form__row">
           <div class="form__priority__container">
             <label class="form__label">Priority: </label>
-            <input type="checkbox" class="form__priority" />
+            <input type="checkbox" class="form__priority__checkbox" />
           </div>
-          <button type="button" class="btn btn__form__submit">Add Task</button>
+          <button type="button" class="btn btn__form-submit">Add Task</button>
         </div>
       </div>
     </main>

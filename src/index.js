@@ -23,6 +23,7 @@ const btnListsMenu = document.querySelector(".lists-menu");
 const listsMenuEndBars = document.querySelectorAll(".bar__end");
 const listsMenuMidBar1 = document.querySelector(".bar__mid");
 const listsMenuMidBar2 = document.querySelector(".bar__mid2");
+const btnAddTask = document.querySelector(".add-task");
 
 // #### Tasks
 const checkboxTaskComplete =
@@ -50,6 +51,7 @@ const taskItems = document.getElementsByClassName("taskitem");
 /* ************************************************** */
 //* HEADER BUTTONS
 /* ************************************************** */
+// SIDEBAR OPEN
 btnListsMenu.addEventListener("click", () => {
   // Reveal side bar
   sidebar.classList.toggle("hidden");
@@ -59,6 +61,9 @@ btnListsMenu.addEventListener("click", () => {
   listsMenuMidBar1.classList.toggle("bar__mid--rotate");
   listsMenuMidBar2.classList.toggle("bar__mid2--rotate");
 });
+
+// ADD TASK OPEN
+btnAddTask.addEventListener("click", () => {});
 
 /* ************************************************** */
 //* TASK BUTTONS
