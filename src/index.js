@@ -32,12 +32,16 @@ import {
   undoCompletedDim,
   clearForm,
   hideSidebarListOptions,
-  addListItem,
+  addList,
   updateActiveListUI,
   toggleSidebarNewListTitle,
   removeErrorOutline,
   addErrorOutline,
   toggleHideEl,
+  toggleButtonSpin,
+  daysLeft, // Delete when done testing
+  addtask,
+  addTask,
 } from "./visual.js";
 
 /* ************************************************** */
@@ -135,10 +139,18 @@ activeListWindow.addEventListener("click", (e) => {
 
   if (!clicked) return;
 
+  const parentTaskId = clicked.parentElement.parentElement.parentElement.id;
+
+  const taskInArr = activeList.items.filter(
+    (task) => task.id === +parentTaskId
+  );
+
+  console.log(taskInArr);
+
   // Toggle task details open on click
   toggleTaskDetailsBtn(clicked);
   toggleInactiveDetailsBtns(e);
-  expandSelectedDetails(clicked);
+  expandSelectedDetails(clicked, taskInArr[0].priority, taskInArr[0].desc);
   hideNonSelectedDetails(clicked);
 });
 
@@ -163,9 +175,8 @@ activeListWindow.addEventListener("click", (e) => {
 //? ---------- BUTTONS ----------
 // Sidebar lists options
 btnAddList.addEventListener("click", (e) => {
-  // if ()
   toggleSidebarNewListTitle(sidebarAddListTitle);
-  // addListItem(sidebarHeader, "Main List", 0);
+  toggleButtonSpin(btnAddList);
 });
 
 sidebar.addEventListener("click", (e) => {
@@ -210,7 +221,7 @@ btnFormSubmit.addEventListener("click", (e) => {
     return;
   }
 
-  // Add task to list
+  // Add task to array
   activeList.addItem(
     formTitle.value,
     formDesc.value,
@@ -218,7 +229,23 @@ btnFormSubmit.addEventListener("click", (e) => {
     formPriority.checked
   );
 
-  console.table(activeList.items);
+  addTask(
+    activeListTitle,
+    activeList.items[0].title,
+    activeList.items[0].dateDue,
+    activeList.items[0].priority,
+    activeList.items[0].id
+  );
+
+  // console.log(activeListWindow.children);
+
+  // while (activeListWindow.children > 1) {
+  //   activeListWindow.removeChild(activeListWindow.lastElementChild);
+  // }
+
+  // activeList.items.forEach((task) => {});
+
+  // console.table(activeList.items);
 
   // Hide and reset form
   toggleHideEl(form);
@@ -235,13 +262,21 @@ const masterList = new MasterList();
 masterList.addItem("Main List");
 
 // Add Default list to sidebar
-addListItem(sidebarHeader, masterList.items[0].title, 0);
+addList(sidebarHeader, masterList.items[0].title, 0);
 
 // Update activeList visual
 let activeList = masterList.items[0];
 updateActiveListUI(activeListTitle, activeList.title);
 
-//TESTING AREA
+//TESTING AREa
+
+// const date = "2023-04-05";
+// console.log(new Date());
+
+// console.log(date);
+
+// console.log(daysLeft(date));
+
 /**
  *
  *

@@ -1,5 +1,7 @@
 "use strict";
 
+import { differenceInCalendarDays, compareAsc, parseISO } from "date-fns";
+
 /**
  * TABLE OF CONTENTS
  
@@ -97,7 +99,11 @@ const toggleInactiveDetailsBtns = function (e) {
 
 const expandSelectedDetails = function (clicked, priority, desc) {
   if (clicked.classList.contains("btn__details--open"))
-    expandTaskitem(clicked.parentElement.parentElement.parentElement);
+    expandTaskitem(
+      clicked.parentElement.parentElement.parentElement,
+      priority,
+      desc
+    );
 };
 
 const hideNonSelectedDetails = function (clicked) {
@@ -144,6 +150,10 @@ const toggleSidebarNewListTitle = function (el) {
   el.classList.toggle("add__list-title--visible");
 };
 
+const toggleButtonSpin = function (el) {
+  el.classList.toggle("spin-45deg");
+};
+
 /* ************************************************** */
 //* Active Task List
 /* ************************************************** */
@@ -161,11 +171,7 @@ const expandTaskitem = function (el, priority, desc) {
 
       <div class="taskitem__details__container">
         <div class="taskitem__details__txt-container">
-          <p>
-            I have to forgive myself for the trespasses of the past and move
-            to the promise of the future lest I have trouble climbing back
-            up <i>de profundis</i>
-          </p>
+          <p>${desc}</p>
         </div>
 
         <div class="taskitem__details__actions-container">
@@ -209,48 +215,69 @@ const hideTaskDetails = function (el) {
   el.removeChild(el.lastElementChild);
 };
 
-const addListItem = function (el, title, numDue) {
+const addList = function (el, title, numDue) {
   const htmlListItem = `
-  <div class="sidebar__listitem">
-  <div class="listitem__options__container">
-  <img
-  src="./images/lists-menu.png"
-  height="20px"
-  class="btn btn__listitem__options"
-  />
-  <div class="listitem__options__menu__container hidden">
-  <div class="arrow-up"></div>
-  <img
-  src="./images/trash.svg"
-  class="btn btn__listitem btn__listitem--del"
-  height="28px"
-  />
-  <img
-  src="./images/down-triangle.png"
-  class="btn btn__listitem btn__listitem--up"
-  height="28px"
-  />
-  <img
-  src="./images/down-triangle.png"
-  class="btn btn__listitem btn__listitem--down"
-  height="28px"
-  />
-  </div>
-  <!-- end listitem__options__menu__container -->
-  </div>
-  <div class="listitem__title">${title}</div>
-  <div class="listitem__due-count">
-  <div class="listitem__due-count__title">Tasks Due:</div>
-  <div class="listitem__due-count__count">${numDue}</div>
-  </div>
-  </div>
+    <div class="sidebar__listitem">
+      <div class="listitem__options__container">
+      <img 
+        src="./images/lists-menu.png"
+        height="20px"
+        class="btn btn__listitem__options"
+      />
+      <div class="listitem__options__menu__container hidden">
+        <div class="arrow-up"></div>
+        <img
+          src="./images/trash.svg"
+          class="btn btn__listitem btn__listitem--del"
+          height="28px"
+        />
+        <img
+          src="./images/down-triangle.png"
+          class="btn btn__listitem btn__listitem--up"
+          height="28px"
+        />
+        <img
+          src="./images/down-triangle.png"
+          class="btn btn__listitem btn__listitem--down"
+          height="28px"
+        />
+      </div>
+      <!-- end listitem__options__menu__container -->
+      </div>
+        <div class="listitem__title">${title}</div>
+        <div class="listitem__due-count">
+        <div class="listitem__due-count__title">Tasks Due:</div>
+        <div class="listitem__due-count__count">${numDue}</div>
+      </div>
+    </div>
   `;
 
   el.insertAdjacentHTML("afterend", htmlListItem);
 };
 
-const htmlTaskItem = `
-  <div class="taskitem">
+const daysLeft = function (date) {
+  const today = new Date();
+  const dateDue = Date.parse(date);
+
+  if (compareAsc(today, dateDue) === 1) {
+    return "OVERDUE!";
+  } else {
+    const diff = differenceInCalendarDays(dateDue, today) + 1;
+
+    if (diff === 0) {
+      return "Today";
+    }
+    if (diff === 1) {
+      return "Tomorrow";
+    }
+
+    return `Due in ${diff} days`;
+  }
+};
+
+const addTask = function (el, title, dateDue, priority, id) {
+  const htmlTaskItem = `
+  <div id=${id} class="taskitem${priority === true ? " priority--true" : ""}">
     <div class="taskitem__abbr">
       <input
         type="checkbox"
@@ -258,8 +285,8 @@ const htmlTaskItem = `
         class="taskitem__checkbox"
       />
       <div class="taskitem__txtbox">
-        <h3>Task Item 1</h3>
-        <p>due in 5 days</p>
+        <h3>${title}</h3>
+        <p>${dateDue === "" ? `&nbsp;` : daysLeft(dateDue)}</p>
       </div>
       <div class="taskitem__btn-details__container">
         <img
@@ -274,6 +301,9 @@ const htmlTaskItem = `
   </div>
 `;
 
+  el.insertAdjacentHTML("afterend", htmlTaskItem);
+};
+
 export {
   clearForm,
   toggleSidebar,
@@ -287,10 +317,13 @@ export {
   removePriorityVisual,
   toggleSidebarListOptions,
   hideSidebarListOptions,
-  addListItem,
+  addList,
   updateActiveListUI,
   toggleSidebarNewListTitle,
   removeErrorOutline,
   addErrorOutline,
   toggleHideEl,
+  toggleButtonSpin,
+  daysLeft, // Delete when done testing
+  addTask,
 };

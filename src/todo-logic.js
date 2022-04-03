@@ -7,7 +7,7 @@ class MasterList {
   }
 
   addItem(title) {
-    this.items.push(new List(title));
+    this.items.unshift(new List(title));
     return this;
   }
 
@@ -68,14 +68,14 @@ class List extends MasterList {
   constructor(title) {
     super();
     this.title = title;
-    this.dateCreated = Date.now();
+    this.id = Date.now();
     this.color = "initial";
     this.items = [];
   }
 
   // Add Task
   addItem(title, desc, dateDue, priority) {
-    this.items.push(new Task(title, desc, dateDue, priority));
+    this.items.unshift(new Task(title, desc, dateDue, priority));
     return this;
   }
 
@@ -89,7 +89,7 @@ class Task {
   constructor(title, desc, dateDue, priority) {
     this.title = title;
     this.desc = desc;
-    this.dateCreated = Date.now();
+    this.id = Date.now();
     this.dateDue = dateDue;
     this.priority = priority;
     this.completed = false;

@@ -24,7 +24,7 @@ TABLE OF CONTENTS:
 
 */
 
-/* ################## # GENERAL FORMATTING ################## */
+/*? ################## # GENERAL FORMATTING ################## */
 header {
   height: 100px;
   background-color: #f9eb96;
@@ -116,7 +116,7 @@ input[type="checkbox"]:checked::before {
   transform: scale(1);
 }
 
-/* ################## # HEADER ################## */
+/*? ################## # HEADER ################## */
 .header--wrapper {
   padding: 0 5vw;
   width: 100%;
@@ -176,7 +176,7 @@ input[type="checkbox"]:checked::before {
   padding: 5px;
 }
 
-/* ################## # MAIN APP ################## */
+/*? ################## # MAIN APP ################## */
 .main-app {
   width: 100%;
   max-width: 770px;
@@ -193,6 +193,7 @@ input[type="checkbox"]:checked::before {
   background-image: linear-gradient(to bottom right, #fcf1cd, #f1eec6);
   box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.37);
   border-radius: 5px;
+  width: 100%;
   max-width: 750px;
   height: 100%;
 
@@ -200,6 +201,7 @@ input[type="checkbox"]:checked::before {
 }
 
 .taskitem__abbr {
+  height: 100%;
   width: 100%;
   border: solid 1px rgba(0, 0, 0, 0.075);
   border-radius: 5px;
@@ -216,14 +218,21 @@ input[type="checkbox"]:checked::before {
 .taskitem__abbr h3 {
   color: inherit;
   font-size: 16px;
+  text-align: center;
 }
 
 .taskitem__abbr p {
   font-size: 12px;
+  color: #80479077;
+  text-shadow: 0 0 0.5px rgba(0, 0, 0, 0.358);
 }
 
 .taskitem__checkbox:checked {
-  border-color: rgb(219, 203, 203);
+  border-color: rgb(219, 214, 203);
+}
+
+.taskitem--expanded {
+  width: 100%;
 }
 
 .taskitem__divider {
@@ -233,6 +242,7 @@ input[type="checkbox"]:checked::before {
 }
 
 .taskitem__details__container {
+  width: 100%;
   border-radius: 5px;
   border-left: solid 1px rgba(0, 0, 0, 0.075);
   padding: 5px;
@@ -268,7 +278,7 @@ input[type="checkbox"]:checked::before {
   margin-right: 2px;
 }
 
-/* ################## # SIDEBAR ################## */
+/*? ################## # SIDEBAR ################## */
 .sidebar__container {
   max-width: 1300px;
   margin: 0 auto;
@@ -401,7 +411,7 @@ input[type="checkbox"]:checked::before {
   text-align: center;
 }
 
-/* ################## # FORM ################## */
+/*? ################## # FORM ################## */
 .form {
   border-radius: 8px;
   background-image: linear-gradient(to right, #e0de7fb0, #b9ae157c);
@@ -473,7 +483,7 @@ input[type="checkbox"]:checked::before {
   transition: all 0.3s;
 }
 
-/* ################## # BUTTONS ################## */
+/*? ################## # BUTTONS ################## */
 .btn {
   cursor: pointer;
   transition: transform 0.3s ease-in-out, filter 0.5s, background-color 0.3s,
@@ -491,6 +501,8 @@ input[type="checkbox"]:checked::before {
 
 .btn__sidebar__add-list {
   margin-right: 15px;
+
+  transition: transform 1s;
 }
 
 .btn__listitem {
@@ -506,7 +518,7 @@ input[type="checkbox"]:checked::before {
   transform: rotate(-90deg);
 }
 
-/* ################## # ACTION STATES ################## */
+/*? ################## # ACTION STATES ################## */
 /* Sidebar */
 .hidden {
   z-index: -2;
@@ -574,7 +586,11 @@ input[type="checkbox"]:checked::before {
   opacity: 1;
 }
 
-/* ################## # MEDIA QUERIES ################## */
+.spin-45deg {
+  transform: rotateZ(315deg);
+}
+
+/*? ################## # MEDIA QUERIES ################## */
 @media only screen and (min-width: 640px) {
   .form {
     right: 7%;
