@@ -74,8 +74,8 @@ class List extends MasterList {
   }
 
   // Add Task
-  addItem(title, desc, dateDue) {
-    this.items.push(new Task(title, desc, dateDue));
+  addItem(title, desc, dateDue, priority) {
+    this.items.push(new Task(title, desc, dateDue, priority));
     return this;
   }
 
@@ -86,12 +86,12 @@ class List extends MasterList {
 
 // TASKS
 class Task {
-  constructor(title, desc, dateDue) {
+  constructor(title, desc, dateDue, priority) {
     this.title = title;
     this.desc = desc;
     this.dateCreated = Date.now();
-    this.dateDue = +dateDue;
-    this.priority = false;
+    this.dateDue = dateDue;
+    this.priority = priority;
     this.completed = false;
     this.completedDate;
   }

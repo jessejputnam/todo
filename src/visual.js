@@ -15,14 +15,19 @@
 /* ************************************************** */
 //* DRY FUNCTIONS
 /* ************************************************** */
-const clearForm = function (form, formTask, formDue, formDesc, formPriority) {
-  form.classList.add("hidden");
+const clearForm = function (formTitle, formDue, formDesc, formPriority) {
+  removeErrorOutline(formTitle);
 
-  formTask.value = "";
+  formTitle.value = "";
   formDue.value = "";
   formDesc.value = "";
   formPriority.checked = false;
 };
+
+const toggleHideEl = (el) => el.classList.toggle("hidden");
+
+const removeErrorOutline = (el) => el.classList.remove("red-outline");
+const addErrorOutline = (el) => el.classList.add("red-outline");
 
 /* ************************************************** */
 //* HEADER BUTTONS
@@ -35,17 +40,12 @@ const toggleSidebar = function (
   listsMenuMidBar2
 ) {
   // Reveal side bar
-  sidebar.classList.toggle("hidden");
+  toggleHideEl(sidebar);
 
   // Tranform close button
   listsMenuEndBars.forEach((bar) => bar.classList.toggle("bar--vanish"));
   listsMenuMidBar1.classList.toggle("bar__mid--rotate");
   listsMenuMidBar2.classList.toggle("bar__mid2--rotate");
-};
-
-// ADD TASK OPEN
-const openAddTask = function (form) {
-  form.classList.remove("hidden");
 };
 
 /* ************************************************** */
@@ -108,7 +108,7 @@ const hideNonSelectedDetails = function (clicked) {
 // Change priority checkbox visual
 const addPriorityVisual = function (e, clicked) {
   // Change box border
-  e.target.classList.add("taskitem__priority-check__checkbox--red-border");
+  e.target.classList.add("red-border");
 
   // Change background color of task
   clicked.parentElement.parentElement.parentElement.parentElement.parentElement.classList.add(
@@ -118,7 +118,7 @@ const addPriorityVisual = function (e, clicked) {
 
 const removePriorityVisual = function (e, clicked) {
   // Change box border
-  e.target.classList.remove("taskitem__priority-check__checkbox--red-border");
+  e.target.classList.remove("red-border");
 
   // Change background color back
   clicked.parentElement.parentElement.parentElement.parentElement.parentElement.classList.remove(
@@ -131,11 +131,13 @@ const removePriorityVisual = function (e, clicked) {
 /* ************************************************** */
 // Sidebar lists options
 const toggleSidebarListOptions = function (clicked) {
-  clicked.parentElement.lastElementChild.classList.toggle("hidden");
+  toggleHideEl(clicked.parentElement.lastElementChild);
+  // clicked.parentElement.lastElementChild.classList.toggle("hidden");
 };
 
 const hideSidebarListOptions = function (clicked) {
-  clicked.parentElement.classList.add("hidden");
+  toggleHideEl(clicked.parentElement);
+  // clicked.parentElement.classList.add("hidden");
 };
 
 const toggleSidebarNewListTitle = function (el) {
@@ -145,7 +147,6 @@ const toggleSidebarNewListTitle = function (el) {
 /* ************************************************** */
 //* Active Task List
 /* ************************************************** */
-
 const updateActiveListUI = function (listNameEl, listName) {
   listNameEl.textContent = listName;
 };
@@ -208,6 +209,46 @@ const hideTaskDetails = function (el) {
   el.removeChild(el.lastElementChild);
 };
 
+const addListItem = function (el, title, numDue) {
+  const htmlListItem = `
+  <div class="sidebar__listitem">
+  <div class="listitem__options__container">
+  <img
+  src="./images/lists-menu.png"
+  height="20px"
+  class="btn btn__listitem__options"
+  />
+  <div class="listitem__options__menu__container hidden">
+  <div class="arrow-up"></div>
+  <img
+  src="./images/trash.svg"
+  class="btn btn__listitem btn__listitem--del"
+  height="28px"
+  />
+  <img
+  src="./images/down-triangle.png"
+  class="btn btn__listitem btn__listitem--up"
+  height="28px"
+  />
+  <img
+  src="./images/down-triangle.png"
+  class="btn btn__listitem btn__listitem--down"
+  height="28px"
+  />
+  </div>
+  <!-- end listitem__options__menu__container -->
+  </div>
+  <div class="listitem__title">${title}</div>
+  <div class="listitem__due-count">
+  <div class="listitem__due-count__title">Tasks Due:</div>
+  <div class="listitem__due-count__count">${numDue}</div>
+  </div>
+  </div>
+  `;
+
+  el.insertAdjacentHTML("afterend", htmlListItem);
+};
+
 const htmlTaskItem = `
   <div class="taskitem">
     <div class="taskitem__abbr">
@@ -233,50 +274,9 @@ const htmlTaskItem = `
   </div>
 `;
 
-const addListItem = function (el, title, numDue) {
-  const htmlListItem = `
-    <div class="sidebar__listitem">
-      <div class="listitem__options__container">
-        <img
-          src="./images/lists-menu.png"
-          height="20px"
-          class="btn btn__listitem__options"
-        />
-        <div class="listitem__options__menu__container hidden">
-          <div class="arrow-up"></div>
-          <img
-            src="./images/trash.svg"
-            class="btn btn__listitem btn__listitem--del"
-            height="28px"
-          />
-          <img
-            src="./images/down-triangle.png"
-            class="btn btn__listitem btn__listitem--up"
-            height="28px"
-          />
-          <img
-            src="./images/down-triangle.png"
-            class="btn btn__listitem btn__listitem--down"
-            height="28px"
-          />
-        </div>
-        <!-- end listitem__options__menu__container -->
-      </div>
-      <div class="listitem__title">${title}</div>
-      <div class="listitem__due-count">
-        <div class="listitem__due-count__title">Tasks Due:</div>
-        <div class="listitem__due-count__count">${numDue}</div>
-      </div>
-    </div>
-  `;
-
-  el.insertAdjacentHTML("afterend", htmlListItem);
-};
-
 export {
   clearForm,
   toggleSidebar,
-  openAddTask,
   dimCompletedTasks,
   undoCompletedDim,
   toggleTaskDetailsBtn,
@@ -290,4 +290,7 @@ export {
   addListItem,
   updateActiveListUI,
   toggleSidebarNewListTitle,
+  removeErrorOutline,
+  addErrorOutline,
+  toggleHideEl,
 };

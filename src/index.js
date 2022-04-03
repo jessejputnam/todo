@@ -30,12 +30,14 @@ import {
   toggleSidebarListOptions,
   toggleTaskDetailsBtn,
   undoCompletedDim,
-  openAddTask,
   clearForm,
   hideSidebarListOptions,
   addListItem,
   updateActiveListUI,
   toggleSidebarNewListTitle,
+  removeErrorOutline,
+  addErrorOutline,
+  toggleHideEl,
 } from "./visual.js";
 
 /* ************************************************** */
@@ -80,7 +82,7 @@ const listItemsOptionsMenu = document.getElementsByClassName(
 
 // FORM
 const form = document.querySelector(".form");
-const formTask = document.querySelector(".form__text--title");
+const formTitle = document.querySelector(".form__text--title");
 const formDue = document.querySelector(".form__date");
 const formDesc = document.querySelector(".form__text-area");
 const formPriority = document.querySelector(".form__priority__checkbox");
@@ -95,8 +97,9 @@ const taskItems = document.getElementsByClassName("taskitem");
 /* ************************************************** */
 
 /* ************************************************** */
-//* HEADER BUTTONS
+//* HEADER
 /* ************************************************** */
+//? ---------- BUTTONS ----------
 // SIDEBAR TOGGLE
 btnListsMenu.addEventListener("click", () => {
   toggleSidebar(sidebar, listsMenuEndBars, listsMenuMidBar1, listsMenuMidBar2);
@@ -104,12 +107,13 @@ btnListsMenu.addEventListener("click", () => {
 
 // ADD TASK OPEN
 btnAddTask.addEventListener("click", () => {
-  openAddTask(form);
+  toggleHideEl(form);
 });
 
 /* ************************************************** */
-//* TASK BUTTONS
+//* TASK
 /* ************************************************** */
+//? ---------- BUTTONS ----------
 // Change completed task checkbox visual
 activeListWindow.addEventListener("click", (e) => {
   const clicked = e.target.closest(".taskitem__checkbox");
@@ -154,8 +158,9 @@ activeListWindow.addEventListener("click", (e) => {
 });
 
 /* ************************************************** */
-//* SIDEBAR BUTTONS
+//* SIDEBAR
 /* ************************************************** */
+//? ---------- BUTTONS ----------
 // Sidebar lists options
 btnAddList.addEventListener("click", (e) => {
   // if ()
@@ -184,14 +189,40 @@ sidebar.addEventListener("click", (e) => {
 });
 
 /* ************************************************** */
-//* FORM BUTTONS
+//* FORM
 /* ************************************************** */
-btnFormClose.addEventListener("click", () => {
-  clearForm(form, formTask, formDue, formDesc, formPriority);
+formTitle.addEventListener("focus", () => {
+  removeErrorOutline(formTitle);
 });
 
-btnFormSubmit.addEventListener("click", () => {
-  clearForm(form, formTask, formDue, formDesc, formPriority);
+//? ---------- BUTTONS ----------
+btnFormClose.addEventListener("click", () => {
+  toggleHideEl(form);
+  clearForm(formTitle, formDue, formDesc, formPriority);
+});
+
+btnFormSubmit.addEventListener("click", (e) => {
+  e.preventDefault();
+
+  // Error if Task title not designated
+  if (formTitle.value === "") {
+    addErrorOutline(formTitle);
+    return;
+  }
+
+  // Add task to list
+  activeList.addItem(
+    formTitle.value,
+    formDesc.value,
+    formDue.value,
+    formPriority.checked
+  );
+
+  console.table(activeList.items);
+
+  // Hide and reset form
+  toggleHideEl(form);
+  clearForm(formTitle, formDue, formDesc, formPriority);
 });
 
 /* ************************************************** */

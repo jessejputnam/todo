@@ -552,7 +552,11 @@ input[type="checkbox"]:checked::before {
   border-bottom: none;
 }
 
-.taskitem__priority-check__checkbox--red-border {
+.red-outline {
+  outline: inset 2px #ef7a8b;
+}
+
+.red-border {
   border-color: #ef7a8b !important;
 }
 
