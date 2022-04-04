@@ -85,7 +85,6 @@ input[type="checkbox"]::before {
   height: 0.65em;
   transform: scale(0);
   transition: transform 120ms ease-in-out;
-  /* box-shadow: inset 1em 1em #4ba557; */
 }
 
 .taskitem__checkbox::before {
@@ -256,8 +255,16 @@ input[type="checkbox"]:checked::before {
   width: 75%;
   padding: 0 10px;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
   border-right: solid 1px rgba(0, 0, 0, 0.075);
+}
+
+.taskitem__due-date__container {
+  color: rgba(3, 84, 106, 0.579);
+  width: 40%;
+  border-top: solid 1px rgba(0, 0, 0, 0.087);
+  transition: all 0.3s;
 }
 
 .taskitem__details__actions-container {
