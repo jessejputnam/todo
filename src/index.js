@@ -40,7 +40,6 @@ import {
   toggleHideEl,
   toggleButtonSpin,
   daysLeft, // Delete when done testing
-  addtask,
   addTask,
 } from "./visual.js";
 
@@ -118,19 +117,38 @@ btnAddTask.addEventListener("click", () => {
 //* TASK
 /* ************************************************** */
 //? ---------- BUTTONS ----------
-// Change completed task checkbox visual
+// Change completed task checkbox
 activeListWindow.addEventListener("click", (e) => {
   const clicked = e.target.closest(".taskitem__checkbox");
   if (!clicked) return;
+
+  const taskID = +clicked.parentElement.parentElement.id;
+  const itemIndex = activeList.items.findIndex((item) => item.id === taskID);
+
+  // Data Change
+  activeList.items[itemIndex].toggleCompleted();
+
+  // Visual Change
+
+  if (clicked.parentElement.parentElement.children.length === 2) {
+    clicked.parentElement.parentElement.lastElementChild.lastElementChild.firstElementChild.lastElementChild.firstElementChild.innerHTML = `${
+      activeList.items[itemIndex].completed === true ? "Completed" : "Due"
+    }`;
+    clicked.parentElement.parentElement.lastElementChild.lastElementChild.firstElementChild.lastElementChild.lastElementChild.innerHTML = `${
+      activeList.items[itemIndex].completed === false
+        ? activeList.items[itemIndex].dateDue.slice(5)
+        : `${String(new Date().getMonth() + 1).padStart(2, "0")}-${String(
+            new Date().getDate()
+          ).padStart(2, "0")}`
+    }`;
+  }
 
   if (clicked.checked) {
     dimCompletedTasks(clicked);
   }
 
   // Undo Change completed task visual
-  if (!clicked.checked) {
-    undoCompletedDim(clicked);
-  }
+  if (!clicked.checked) undoCompletedDim(clicked);
 });
 
 // Visual for open task details button
@@ -139,34 +157,39 @@ activeListWindow.addEventListener("click", (e) => {
 
   if (!clicked) return;
 
-  const parentTaskId = clicked.parentElement.parentElement.parentElement.id;
-
-  const taskInArr = activeList.items.filter(
-    (task) => task.id === +parentTaskId
-  );
-
-  console.log(taskInArr);
+  const taskID = +clicked.parentElement.parentElement.parentElement.id;
+  const taskInArr = activeList.items.filter((task) => task.id === taskID);
 
   // Toggle task details open on click
   toggleTaskDetailsBtn(clicked);
   toggleInactiveDetailsBtns(e);
-  expandSelectedDetails(clicked, taskInArr[0].priority, taskInArr[0].desc);
+  expandSelectedDetails(
+    clicked,
+    taskInArr[0].priority,
+    taskInArr[0].desc,
+    taskInArr[0].completed,
+    taskInArr[0].dateDue
+  );
   hideNonSelectedDetails(clicked);
 });
 
-// Change priority checkbox visual
+// Change priority checkbox
 activeListWindow.addEventListener("click", (e) => {
   const clicked = e.target.closest(".taskitem__priority-check__checkbox");
 
   if (!clicked) return;
+  const taskID =
+    +clicked.parentElement.parentElement.parentElement.parentElement
+      .parentElement.id;
+  const itemIndex = activeList.items.findIndex((item) => item.id === taskID);
 
-  if (clicked.checked) {
-    addPriorityVisual(e, clicked);
-  }
+  // Data Change
+  activeList.items[itemIndex].togglePriority();
 
-  if (!clicked.checked) {
-    removePriorityVisual(e, clicked);
-  }
+  // Visual Change
+  if (clicked.checked) addPriorityVisual(clicked);
+
+  if (!clicked.checked) removePriorityVisual(clicked);
 });
 
 /* ************************************************** */

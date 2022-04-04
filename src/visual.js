@@ -65,14 +65,29 @@ const dimCompletedTasks = function (clicked) {
 
   // Change task item filter
   clicked.parentElement.parentElement.classList.add("completed--true");
+
+  // Change Details due date font color
+  clicked.parentElement.parentElement.lastElementChild.lastElementChild.firstElementChild.lastElementChild?.classList.add(
+    "checked"
+  );
 };
 
 const undoCompletedDim = function (clicked) {
+  // Change task text color / strikethru
   clicked.parentElement.classList.remove("checked");
+
+  // Change task details button color
   clicked.parentElement.lastElementChild.firstElementChild.classList.remove(
     "btn__details--completed"
   );
+
+  // Change task item filter
   clicked.parentElement.parentElement.classList.remove("completed--true");
+
+  // Change Details due date font color
+  clicked.parentElement.parentElement.lastElementChild.lastElementChild.firstElementChild.lastElementChild?.classList.remove(
+    "checked"
+  );
 };
 
 // Visual for open task details button
@@ -97,12 +112,20 @@ const toggleInactiveDetailsBtns = function (e) {
   }
 };
 
-const expandSelectedDetails = function (clicked, priority, desc) {
+const expandSelectedDetails = function (
+  clicked,
+  priority,
+  desc,
+  completed,
+  dateDue
+) {
   if (clicked.classList.contains("btn__details--open"))
     expandTaskitem(
       clicked.parentElement.parentElement.parentElement,
       priority,
-      desc
+      desc,
+      completed,
+      dateDue
     );
 };
 
@@ -112,20 +135,14 @@ const hideNonSelectedDetails = function (clicked) {
 };
 
 // Change priority checkbox visual
-const addPriorityVisual = function (e, clicked) {
-  // Change box border
-  e.target.classList.add("red-border");
-
+const addPriorityVisual = function (clicked) {
   // Change background color of task
   clicked.parentElement.parentElement.parentElement.parentElement.parentElement.classList.add(
     "priority--true"
   );
 };
 
-const removePriorityVisual = function (e, clicked) {
-  // Change box border
-  e.target.classList.remove("red-border");
-
+const removePriorityVisual = function (clicked) {
   // Change background color back
   clicked.parentElement.parentElement.parentElement.parentElement.parentElement.classList.remove(
     "priority--true"
@@ -164,7 +181,7 @@ const updateActiveListUI = function (listNameEl, listName) {
 /* ************************************************** */
 //* HTML Inserts
 /* ************************************************** */
-const expandTaskitem = function (el, priority, desc) {
+const expandTaskitem = function (el, priority, desc, completed, dateDue) {
   const htmlTaskDetails = `
     <div class="taskitem--expanded">
       <hr class="taskitem__divider" />
@@ -172,6 +189,21 @@ const expandTaskitem = function (el, priority, desc) {
       <div class="taskitem__details__container">
         <div class="taskitem__details__txt-container">
           <p>${desc}</p>
+          <div class="taskitem__due-date__container ${
+            completed === true ? "checked" : ""
+          }">
+            <div class="taskitem__due-date__title">${
+              completed === true ? "Completed" : "Due"
+            }</div>
+            <div class="taskitem__due-date__date">${
+              completed === false
+                ? dateDue.slice(5)
+                : `${String(new Date().getMonth() + 1).padStart(
+                    2,
+                    "0"
+                  )}-${String(new Date().getDate()).padStart(2, "0")}`
+            }</div>
+          </div>
         </div>
 
         <div class="taskitem__details__actions-container">
@@ -181,6 +213,7 @@ const expandTaskitem = function (el, priority, desc) {
               type="checkbox"
               name="priority__checkbox"
               class="taskitem__priority-check__checkbox"
+              ${priority === true ? "checked" : ""}
             />
           </label>
           <div class="taskitem__edit__container">
