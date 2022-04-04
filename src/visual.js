@@ -191,7 +191,7 @@ const toggleButtonSpin = function (el) {
 /* ************************************************** */
 //* Active Task List
 /* ************************************************** */
-const updateActiveListUI = function (listNameEl, listName) {
+const updateActiveListTitle = function (listNameEl, listName) {
   listNameEl.textContent = listName;
 };
 
@@ -354,6 +354,13 @@ const addTask = function (el, title, dateDue, priority, id) {
   el.insertAdjacentHTML("afterend", htmlTaskItem);
 };
 
+/* ************************************************** */
+//* FIND PARENT ELEMENTS AND CORRESPONDING ARRAY INDEXES
+/* ************************************************** */
+
+/* ************************************************** */
+//* EXPORTS
+/* ************************************************** */
 export {
   clearForm,
   toggleSidebar,
@@ -363,12 +370,13 @@ export {
   toggleInactiveDetailsBtns,
   expandSelectedDetails,
   hideNonSelectedDetails,
+  hideTaskDetails,
   addPriorityVisual,
   removePriorityVisual,
   toggleSidebarListOptions,
   hideSidebarListOptions,
   addList,
-  updateActiveListUI,
+  updateActiveListTitle,
   toggleSidebarNewListTitle,
   removeErrorOutline,
   addErrorOutline,

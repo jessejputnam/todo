@@ -24,6 +24,7 @@ import {
   dimCompletedTasks,
   expandSelectedDetails,
   hideNonSelectedDetails,
+  hideTaskDetails,
   removePriorityVisual,
   toggleInactiveDetailsBtns,
   toggleSidebar,
@@ -33,7 +34,7 @@ import {
   clearForm,
   hideSidebarListOptions,
   addList,
-  updateActiveListUI,
+  updateActiveListTitle,
   toggleSidebarNewListTitle,
   removeErrorOutline,
   addErrorOutline,
@@ -56,18 +57,9 @@ const listsMenuMidBar2 = document.querySelector(".bar__mid2");
 const btnAddTask = document.querySelector(".add-task");
 
 // ---- Tasks
-const checkboxTaskComplete =
-  document.getElementsByClassName("taskitem__checkbox");
-const btnTaskDetails = document.getElementsByClassName("btn__details");
-const checkboxPriority = document.getElementsByClassName(
-  "taskitem__priority-check__checkbox"
-);
-const btnEditTask = document.getElementsByClassName("btn__taskitem__edit");
-const btnDelTask = document.getElementsByClassName("btn__taskitem__delete");
 
 // ---- Sidebar
 const btnAddList = document.querySelector(".btn__sidebar__add-list");
-const btnListsOpts = document.getElementsByClassName("btn__listitem__options");
 
 // ---- Form
 const btnFormClose = document.querySelector(".btn__form-close");
@@ -79,52 +71,74 @@ const sidebarHeader = document.querySelector(".sidebar__header");
 const sidebarAddListTitle = document.querySelector(
   ".sidebar__add-list__add-title__container"
 );
-const listItems = document.getElementsByClassName("sidebar__listitem");
-const listItemsOptionsMenu = document.getElementsByClassName(
-  "listitem__options__menu__container"
-);
 
 // FORM
 const form = document.querySelector(".form");
-const formTitle = document.querySelector(".form__text--title");
+const formTitle = document.querySelector(".form__title");
+const formTaskTitle = document.querySelector(".form__text--title");
 const formDue = document.querySelector(".form__date");
 const formDesc = document.querySelector(".form__text-area");
 const formPriority = document.querySelector(".form__priority__checkbox");
+const formPriorityContainer = document.querySelector(
+  ".form__priority__container"
+);
 
 // -- MAIN APP
+const logo = document.querySelector(".logo__container");
 const activeListWindow = document.querySelector(".main-app");
+const activeListHeader = document.querySelector(".active-list__header");
 const activeListTitle = document.querySelector(".active-list__title");
-const taskItems = document.getElementsByClassName("taskitem");
 
 /* ************************************************** */
 //* DRY FUNCTIONS
 /* ************************************************** */
+const findItemIndex = function (clicked) {
+  const taskID = +clicked.closest(".taskitem").id;
+  return activeList.items.findIndex((item) => item.id === taskID);
+};
+
+const updateUI = function () {
+  // Clear visible list to allow for update
+  while (activeListWindow.children.length > 1) {
+    activeListWindow.removeChild(activeListWindow.lastChild);
+  }
+
+  const copyList = activeList.items.slice();
+  copyList.reverse();
+
+  copyList.forEach((task) => {
+    addTask(activeListHeader, task.title, task.dateDue, task.priority, task.id);
+  });
+};
 
 /* ************************************************** */
 //* HEADER
 /* ************************************************** */
-//? ---------- BUTTONS ----------
-// SIDEBAR TOGGLE
+//* ---------- BUTTONS ----------
+//* SIDEBAR TOGGLE
 btnListsMenu.addEventListener("click", () => {
   toggleSidebar(sidebar, listsMenuEndBars, listsMenuMidBar1, listsMenuMidBar2);
 });
 
-// ADD TASK OPEN
+//* ADD TASK OPEN
 btnAddTask.addEventListener("click", () => {
+  formTitle.textContent = "Add Task";
+  btnFormSubmit.value = "Add Task";
+  formPriorityContainer.classList.remove("invisible");
+  form.removeAttribute("data-taskid");
   toggleHideEl(form);
 });
 
 /* ************************************************** */
 //* TASK
 /* ************************************************** */
-//? ---------- BUTTONS ----------
-// Change completed task checkbox
+//* ---------- BUTTONS ----------
+//* COMPLETED TASK CHECKBOX
 activeListWindow.addEventListener("click", (e) => {
   const clicked = e.target.closest(".taskitem__checkbox");
   if (!clicked) return;
 
-  const taskID = +clicked.parentElement.parentElement.id;
-  const itemIndex = activeList.items.findIndex((item) => item.id === taskID);
+  const itemIndex = findItemIndex(clicked);
 
   // Data Change
   activeList.items[itemIndex].toggleCompleted();
@@ -138,15 +152,17 @@ activeListWindow.addEventListener("click", (e) => {
 
   // Undo Change completed task visual
   if (!clicked.checked) undoCompletedDim(clicked);
+
+  console.table(activeList.items);
 });
 
-// Visual for open task details button
+//* OPEN TASK DETAILS
 activeListWindow.addEventListener("click", (e) => {
   const clicked = e.target.closest(".btn__details");
 
   if (!clicked) return;
 
-  const taskID = +clicked.parentElement.parentElement.parentElement.id;
+  const taskID = +clicked.closest(".taskitem").id;
   const taskInArr = activeList.items.filter((task) => task.id === taskID);
 
   // Toggle task details open on click
@@ -162,15 +178,12 @@ activeListWindow.addEventListener("click", (e) => {
   hideNonSelectedDetails(clicked);
 });
 
-// Change priority checkbox
+//* CHANGE PRIORITY CHECKBOX
 activeListWindow.addEventListener("click", (e) => {
   const clicked = e.target.closest(".taskitem__priority-check__checkbox");
-
   if (!clicked) return;
-  const taskID =
-    +clicked.parentElement.parentElement.parentElement.parentElement
-      .parentElement.id;
-  const itemIndex = activeList.items.findIndex((item) => item.id === taskID);
+
+  const itemIndex = findItemIndex(clicked);
 
   // Data Change
   activeList.items[itemIndex].togglePriority();
@@ -181,11 +194,33 @@ activeListWindow.addEventListener("click", (e) => {
   if (!clicked.checked) removePriorityVisual(clicked);
 });
 
+//* EDIT TASK
+activeListWindow.addEventListener("click", (e) => {
+  const clicked = e.target.closest(".btn__taskitem__edit");
+  if (!clicked) return;
+
+  const itemIndex = findItemIndex(clicked);
+
+  formTitle.textContent = "Edit Task";
+  btnFormSubmit.value = "Edit Task";
+  formPriorityContainer.classList.add("invisible");
+
+  // Populate form with arr info
+  formTaskTitle.value = activeList.items[itemIndex].title;
+  formDue.value = activeList.items[itemIndex].dateDue;
+  formDesc.value = activeList.items[itemIndex].desc;
+
+  // Add data attribute to track arr item placement
+  form.setAttribute("data-taskid", activeList.items[itemIndex].id);
+
+  toggleHideEl(form);
+});
+
 /* ************************************************** */
 //* SIDEBAR
 /* ************************************************** */
-//? ---------- BUTTONS ----------
-// Sidebar lists options
+//* ---------- BUTTONS ----------
+//* SIDEBAR LIST OPTIONS
 btnAddList.addEventListener("click", (e) => {
   toggleSidebarNewListTitle(sidebarAddListTitle);
   toggleButtonSpin(btnAddList);
@@ -214,54 +249,57 @@ sidebar.addEventListener("click", (e) => {
 /* ************************************************** */
 //* FORM
 /* ************************************************** */
-formTitle.addEventListener("focus", () => {
-  removeErrorOutline(formTitle);
+formTaskTitle.addEventListener("focus", () => {
+  removeErrorOutline(formTaskTitle);
 });
 
-//? ---------- BUTTONS ----------
+//* ---------- BUTTONS ----------
 btnFormClose.addEventListener("click", () => {
   toggleHideEl(form);
-  clearForm(formTitle, formDue, formDesc, formPriority);
+  clearForm(formTaskTitle, formDue, formDesc, formPriority);
 });
 
 btnFormSubmit.addEventListener("click", (e) => {
   e.preventDefault();
 
   // Error if Task title not designated
-  if (formTitle.value === "") {
-    addErrorOutline(formTitle);
+  if (formTaskTitle.value === "") {
+    addErrorOutline(formTaskTitle);
     return;
   }
 
-  // Add task to array
-  activeList.addItem(
-    formTitle.value,
-    formDesc.value,
-    formDue.value,
-    formPriority.checked
-  );
+  if (!form.hasAttribute("data-taskid")) {
+    // Add task to array
+    activeList.addItem(
+      formTaskTitle.value,
+      formDesc.value,
+      formDue.value,
+      formPriority.checked
+    );
 
-  addTask(
-    activeListTitle,
-    activeList.items[0].title,
-    activeList.items[0].dateDue,
-    activeList.items[0].priority,
-    activeList.items[0].id
-  );
+    addTask(
+      activeListHeader,
+      activeList.items[0].title,
+      activeList.items[0].dateDue,
+      activeList.items[0].priority,
+      activeList.items[0].id
+    );
+  }
 
-  // console.log(activeListWindow.children);
+  if (form.hasAttribute("data-taskid")) {
+    const curTaskIndex = activeList.items.findIndex(
+      (item) => item.id === +form.dataset.taskid
+    );
+    activeList.items[curTaskIndex].title = formTaskTitle.value;
+    activeList.items[curTaskIndex].desc = formDesc.value;
+    activeList.items[curTaskIndex].dateDue = formDue.value;
 
-  // while (activeListWindow.children > 1) {
-  //   activeListWindow.removeChild(activeListWindow.lastElementChild);
-  // }
-
-  // activeList.items.forEach((task) => {});
-
-  // console.table(activeList.items);
+    updateUI();
+  }
 
   // Hide and reset form
   toggleHideEl(form);
-  clearForm(formTitle, formDue, formDesc, formPriority);
+  clearForm(formTaskTitle, formDue, formDesc, formPriority);
 });
 
 /* ************************************************** */
@@ -278,16 +316,15 @@ addList(sidebarHeader, masterList.items[0].title, 0);
 
 // Update activeList visual
 let activeList = masterList.items[0];
-updateActiveListUI(activeListTitle, activeList.title);
+updateActiveListTitle(activeListTitle, activeList.title);
 
-//TESTING AREa
+//! TESTING AREA ----------------------------
 
-// const date = "2023-04-05";
-// console.log(new Date());
+logo.addEventListener("click", () => {});
 
-// console.log(date);
+formTitle.addEventListener("click", () => {});
 
-// console.log(daysLeft(date));
+activeListHeader.addEventListener("click", function () {});
 
 /**
  *
