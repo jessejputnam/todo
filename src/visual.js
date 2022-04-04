@@ -149,6 +149,23 @@ const removePriorityVisual = function (clicked) {
   );
 };
 
+// Change inner details of date due -> completed and back
+const toggleTaskCompletedDueDate = function (clicked, activeList, itemIndex) {
+  if (clicked.parentElement.parentElement.children.length === 2) {
+    clicked.parentElement.parentElement.lastElementChild.lastElementChild.firstElementChild.lastElementChild.firstElementChild.innerHTML = `${
+      activeList.items[itemIndex].completed === true ? "Completed" : "Due"
+    }`;
+
+    clicked.parentElement.parentElement.lastElementChild.lastElementChild.firstElementChild.lastElementChild.lastElementChild.innerHTML = `${
+      activeList.items[itemIndex].completed === false
+        ? activeList.items[itemIndex].dateDue.slice(5)
+        : `${String(new Date().getMonth() + 1).padStart(2, "0")}-${String(
+            new Date().getDate()
+          ).padStart(2, "0")}`
+    }`;
+  }
+};
+
 /* ************************************************** */
 //* SIDEBAR BUTTONS
 /* ************************************************** */
@@ -359,4 +376,5 @@ export {
   toggleButtonSpin,
   daysLeft, // Delete when done testing
   addTask,
+  toggleTaskCompletedDueDate,
 };

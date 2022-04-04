@@ -41,6 +41,7 @@ import {
   toggleButtonSpin,
   daysLeft, // Delete when done testing
   addTask,
+  toggleTaskCompletedDueDate,
 } from "./visual.js";
 
 /* ************************************************** */
@@ -129,19 +130,7 @@ activeListWindow.addEventListener("click", (e) => {
   activeList.items[itemIndex].toggleCompleted();
 
   // Visual Change
-
-  if (clicked.parentElement.parentElement.children.length === 2) {
-    clicked.parentElement.parentElement.lastElementChild.lastElementChild.firstElementChild.lastElementChild.firstElementChild.innerHTML = `${
-      activeList.items[itemIndex].completed === true ? "Completed" : "Due"
-    }`;
-    clicked.parentElement.parentElement.lastElementChild.lastElementChild.firstElementChild.lastElementChild.lastElementChild.innerHTML = `${
-      activeList.items[itemIndex].completed === false
-        ? activeList.items[itemIndex].dateDue.slice(5)
-        : `${String(new Date().getMonth() + 1).padStart(2, "0")}-${String(
-            new Date().getDate()
-          ).padStart(2, "0")}`
-    }`;
-  }
+  toggleTaskCompletedDueDate(clicked, activeList, itemIndex);
 
   if (clicked.checked) {
     dimCompletedTasks(clicked);
