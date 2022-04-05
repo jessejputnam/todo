@@ -314,7 +314,7 @@ const daysLeft = function (date) {
   } else {
     const diff = differenceInCalendarDays(dateDue, today) + 1;
 
-    if (diff === 0) {
+    if (diff == 0) {
       return "Today";
     }
     if (diff === 1) {
@@ -325,14 +325,17 @@ const daysLeft = function (date) {
   }
 };
 
-const addTask = function (el, title, dateDue, priority, id) {
+const addTask = function (el, title, dateDue, priority, id, completed) {
   const htmlTaskItem = `
-  <div id=${id} class="taskitem${priority === true ? " priority--true" : ""}">
-    <div class="taskitem__abbr">
+  <div id=${id} class="taskitem${priority === true ? " priority--true" : ""}${
+    completed ? " completed--true" : ""
+  }">
+    <div class="taskitem__abbr${completed ? " checked" : ""}">
       <input
         type="checkbox"
         name="completed-checkbox"
         class="taskitem__checkbox"
+        ${completed ? "checked" : ""}
       />
       <div class="taskitem__txtbox">
         <h3>${title}</h3>
@@ -344,7 +347,7 @@ const addTask = function (el, title, dateDue, priority, id) {
           alt="Open details"
           title="Details"
           height="20px"
-          class="btn btn__details"
+          class="btn btn__details${completed ? " btn__details--completed" : ""}"
         />
       </div>
     </div>

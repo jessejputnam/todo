@@ -55,6 +55,7 @@ const listsMenuEndBars = document.querySelectorAll(".bar__end");
 const listsMenuMidBar1 = document.querySelector(".bar__mid");
 const listsMenuMidBar2 = document.querySelector(".bar__mid2");
 const btnAddTask = document.querySelector(".add-task");
+const sortOptsContainer = document.querySelector(".sortby__opts__container");
 
 // ---- Tasks
 
@@ -107,8 +108,19 @@ const updateUI = function () {
   copyList.reverse();
 
   copyList.forEach((task) => {
-    addTask(activeListHeader, task.title, task.dateDue, task.priority, task.id);
+    addTask(
+      activeListHeader,
+      task.title,
+      task.dateDue,
+      task.priority,
+      task.id,
+      task.completed
+    );
   });
+};
+
+const convertDateToUTC = function (date) {
+  +Date.parse(date);
 };
 
 /* ************************************************** */
@@ -127,6 +139,64 @@ btnAddTask.addEventListener("click", () => {
   formPriorityContainer.classList.remove("invisible");
   form.removeAttribute("data-taskid");
   toggleHideEl(form);
+  formTaskTitle.focus();
+});
+
+//* ACTIVELIST HEADER BUTTONS
+activeListHeader.addEventListener("click", (e) => {
+  const openSortOpts = e.target.closest(".btn__show__sort-opts");
+  const sortDirFlip = e.target.closest(".btn__active-list__sort-dir");
+  const clearCompleted = e.target.closest(".btn__clear-compl");
+
+  if (!openSortOpts && !sortDirFlip && !clearCompleted) return;
+
+  // Open sorting options menu
+  if (openSortOpts) sortOptsContainer.classList.toggle("show-sort-opts");
+
+  // Flip Sort Directions
+  if (sortDirFlip) {
+    activeList.items.reverse();
+    updateUI();
+  }
+
+  // Clear Completed
+  if (clearCompleted) {
+    activeList._clearCompletedTasks();
+    updateUI();
+  }
+});
+
+//* SORT OPTIONS
+sortOptsContainer.addEventListener("click", (e) => {
+  const clicked = e.target.closest(".sortby__opts__item");
+
+  sortOptsContainer.classList.toggle("show-sort-opts");
+
+  if (!clicked) return;
+  // Sort order for Completed
+  else if (clicked.dataset.sortid === "completed")
+    activeList.items.sort(
+      (a, b) => a[clicked.dataset.sortid] - b[clicked.dataset.sortid]
+    );
+  // Sort order for Date Due
+  else if (clicked.dataset.sortid === "dateDue") {
+    console.log(activeList.items[0].dateDue);
+    console.log(Date.parse(activeList.items[0].dateDue));
+
+    activeList.items.sort(
+      (a, b) =>
+        Date.parse(a[clicked.dataset.sortid]) -
+        Date.parse(b[clicked.dataset.sortid])
+    );
+  }
+
+  // Sort order for Date Created && Priority
+  else
+    activeList.items.sort(
+      (a, b) => b[clicked.dataset.sortid] - a[clicked.dataset.sortid]
+    );
+
+  updateUI();
 });
 
 /* ************************************************** */
@@ -216,6 +286,12 @@ activeListWindow.addEventListener("click", (e) => {
   toggleHideEl(form);
 });
 
+//* DELETE TASK
+activeListWindow.addEventListener("click", (e) => {
+  const clicked = e.target.closest("btn__taskitem__delete");
+  if (!clicked) return;
+});
+
 /* ************************************************** */
 //* SIDEBAR
 /* ************************************************** */
@@ -269,6 +345,8 @@ btnFormSubmit.addEventListener("click", (e) => {
   }
 
   if (!form.hasAttribute("data-taskid")) {
+    formTaskTitle.blur();
+
     // Add task to array
     activeList.addItem(
       formTaskTitle.value,
@@ -277,16 +355,20 @@ btnFormSubmit.addEventListener("click", (e) => {
       formPriority.checked
     );
 
+    // Add task to DOM
     addTask(
       activeListHeader,
       activeList.items[0].title,
       activeList.items[0].dateDue,
       activeList.items[0].priority,
-      activeList.items[0].id
+      activeList.items[0].id,
+      activeList.items[0].completed
     );
   }
 
   if (form.hasAttribute("data-taskid")) {
+    formTaskTitle.blur();
+
     const curTaskIndex = activeList.items.findIndex(
       (item) => item.id === +form.dataset.taskid
     );
@@ -320,7 +402,9 @@ updateActiveListTitle(activeListTitle, activeList.title);
 
 //! TESTING AREA ----------------------------
 
-logo.addEventListener("click", () => {});
+logo.addEventListener("click", () => {
+  console.table(Date.parse(activeList.items[0].dateDue));
+});
 
 formTitle.addEventListener("click", () => {});
 

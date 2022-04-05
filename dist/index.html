@@ -15,6 +15,7 @@
     <link href="./css/reset.css" rel="stylesheet" />
     <link href="./css/styles.css" rel="stylesheet" />
 
+    <link href="./images/list-check.png" rel="icon">
     <script src="main.js" defer></script>
     <title>Due It!</title>
   </head>
@@ -76,6 +77,21 @@
       <section class="main-app">
         <div class="active-list__header">
           <h2 class="active-list__title"></h2>
+          <div class="active-list__sort__container">
+            <p class="btn btn__show__sort-opts active-list__header__txt">Sort By</p>
+            <img src="./images/exchange.png" alt="Change sort direction" title="Sort Direction" class="btn btn__active-list__sort-dir">
+            <div class="sortby__opts__container">
+              <ul class="sortby__opts__list">
+                <li data-sortID="id" class="btn sortby__opts__item">Date Created</li>
+                <li data-sortID="dateDue" class="btn sortby__opts__item">Date Due</li>
+                <li data-sortID="priority" class="btn sortby__opts__item">Priority</li>
+                <li data-sortID="completed" class="btn sortby__opts__item">Completed</li>
+              </ul>
+            </div>
+          </div>
+          <div class="active-list__clear__container">
+            <p class="btn btn__clear-compl active-list__header__txt">Clear Completed</p>
+          </div>
         </div>
       </section>
 
