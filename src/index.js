@@ -24,7 +24,6 @@ import {
   dimCompletedTasks,
   expandSelectedDetails,
   hideNonSelectedDetails,
-  hideTaskDetails,
   removePriorityVisual,
   toggleInactiveDetailsBtns,
   toggleSidebar,
@@ -40,9 +39,9 @@ import {
   addErrorOutline,
   toggleHideEl,
   toggleButtonSpin,
-  daysLeft, // Delete when done testing
   addTask,
   toggleTaskCompletedDueDate,
+  daysLeft,
 } from "./visual.js";
 
 /* ************************************************** */
@@ -61,6 +60,7 @@ const sortOptsContainer = document.querySelector(".sortby__opts__container");
 
 // ---- Sidebar
 const btnAddList = document.querySelector(".btn__sidebar__add-list");
+const btnAddListTitle = document.querySelector("#add-list__title");
 
 // ---- Form
 const btnFormClose = document.querySelector(".btn__form-close");
@@ -69,8 +69,11 @@ const btnFormSubmit = document.querySelector(".btn__form-submit");
 // SIDEBAR
 const sidebar = document.querySelector(".sidebar");
 const sidebarHeader = document.querySelector(".sidebar__header");
-const sidebarAddListTitle = document.querySelector(
+const sidebarAddListTitleContainer = document.querySelector(
   ".sidebar__add-list__add-title__container"
+);
+const sidebarAddListTitleInput = document.querySelector(
+  ".sidebar__add-list__add-title"
 );
 
 // FORM
@@ -98,12 +101,19 @@ const findItemIndex = function (clicked) {
   return activeList.items.findIndex((item) => item.id === taskID);
 };
 
-const updateUI = function () {
+const findListIndex = function (clickedBtn) {
+  return masterList.items.findIndex(
+    (list) => list.id === +clickedBtn.closest(".sidebar__listitem").id
+  );
+};
+
+const updateActiveListUI = function () {
   // Clear visible list to allow for update
   while (activeListWindow.children.length > 1) {
     activeListWindow.removeChild(activeListWindow.lastChild);
   }
 
+  // Shallow copy to reverse so items remain in correct order visually
   const copyList = activeList.items.slice();
   copyList.reverse();
 
@@ -119,8 +129,28 @@ const updateUI = function () {
   });
 };
 
-const convertDateToUTC = function (date) {
-  +Date.parse(date);
+const updateSidebarUI = function () {
+  // Clear visible list to allow for update
+  while (sidebar.children.length > 1) {
+    sidebar.removeChild(sidebar.lastChild);
+  }
+
+  const copyList = masterList.items.slice();
+  copyList.reverse();
+
+  copyList.forEach((list) => {
+    const incompleteItems = list.items.filter(
+      (item) => item.completed === false
+    );
+
+    addList(
+      sidebarHeader,
+      list.title,
+      incompleteItems.length,
+      list.id,
+      activeList.id
+    );
+  });
 };
 
 /* ************************************************** */
@@ -130,6 +160,11 @@ const convertDateToUTC = function (date) {
 //* SIDEBAR TOGGLE
 btnListsMenu.addEventListener("click", () => {
   toggleSidebar(sidebar, listsMenuEndBars, listsMenuMidBar1, listsMenuMidBar2);
+
+  // Update sidebar UI if opening sidebar
+  if (btnListsMenu.firstElementChild.classList.contains("bar--vanish")) {
+    updateSidebarUI();
+  }
 });
 
 //* ADD TASK OPEN
@@ -156,13 +191,13 @@ activeListHeader.addEventListener("click", (e) => {
   // Flip Sort Directions
   if (sortDirFlip) {
     activeList.items.reverse();
-    updateUI();
+    updateActiveListUI();
   }
 
   // Clear Completed
   if (clearCompleted) {
     activeList._clearCompletedTasks();
-    updateUI();
+    updateActiveListUI();
   }
 });
 
@@ -180,9 +215,6 @@ sortOptsContainer.addEventListener("click", (e) => {
     );
   // Sort order for Date Due
   else if (clicked.dataset.sortid === "dateDue") {
-    console.log(activeList.items[0].dateDue);
-    console.log(Date.parse(activeList.items[0].dateDue));
-
     activeList.items.sort(
       (a, b) =>
         Date.parse(a[clicked.dataset.sortid]) -
@@ -196,7 +228,7 @@ sortOptsContainer.addEventListener("click", (e) => {
       (a, b) => b[clicked.dataset.sortid] - a[clicked.dataset.sortid]
     );
 
-  updateUI();
+  updateActiveListUI();
 });
 
 /* ************************************************** */
@@ -222,8 +254,6 @@ activeListWindow.addEventListener("click", (e) => {
 
   // Undo Change completed task visual
   if (!clicked.checked) undoCompletedDim(clicked);
-
-  console.table(activeList.items);
 });
 
 //* OPEN TASK DETAILS
@@ -288,20 +318,93 @@ activeListWindow.addEventListener("click", (e) => {
 
 //* DELETE TASK
 activeListWindow.addEventListener("click", (e) => {
-  const clicked = e.target.closest("btn__taskitem__delete");
+  const clicked = e.target.closest(".btn__taskitem__delete");
   if (!clicked) return;
+
+  const itemIndex = findItemIndex(clicked);
+
+  activeList.items.splice(itemIndex, 1);
+
+  updateActiveListUI();
 });
 
 /* ************************************************** */
 //* SIDEBAR
 /* ************************************************** */
-//* ---------- BUTTONS ----------
-//* SIDEBAR LIST OPTIONS
-btnAddList.addEventListener("click", (e) => {
-  toggleSidebarNewListTitle(sidebarAddListTitle);
-  toggleButtonSpin(btnAddList);
+// Remove error outline when input selected
+sidebarAddListTitleInput.addEventListener("focus", () => {
+  sidebarAddListTitleInput.classList.remove("red-outline");
 });
 
+// Active List Selection
+sidebar.addEventListener("click", (e) => {
+  const clicked = e.target.closest(".listitem__title");
+  if (!clicked) return;
+
+  const lists = sidebar.querySelectorAll(".sidebar__listitem");
+  lists.forEach((list) => {
+    list.classList.remove("active-list");
+  });
+
+  const selectedListIndex = masterList.items.findIndex(
+    (item) => item.id === +clicked.parentElement.id
+  );
+  activeList = masterList.items[selectedListIndex];
+
+  updateActiveListTitle(activeListTitle, activeList.title);
+  updateActiveListUI();
+
+  clicked.parentElement.classList.add("active-list");
+});
+
+//* ---------- BUTTONS ----------
+//* SIDEBAR OPEN ADD LIST INPUT
+btnAddList.addEventListener("click", (e) => {
+  toggleSidebarNewListTitle(sidebarAddListTitleContainer);
+  toggleButtonSpin(btnAddList);
+  sidebarAddListTitleInput.value = "";
+  sidebarAddListTitleInput.focus();
+});
+
+//* ADD NEW LIST
+btnAddListTitle.addEventListener("click", () => {
+  if (sidebarAddListTitleInput.value === "") {
+    sidebarAddListTitleInput.classList.add("red-outline");
+    return;
+  }
+
+  // Change Data
+  masterList.addItem(sidebarAddListTitleInput.value);
+
+  // Change Visual
+  addList(
+    sidebarHeader,
+    masterList.items[0].title,
+    masterList.items[0].items.length,
+    masterList.items[0].id
+  );
+
+  // Remove active list on previous
+  const lists = sidebar.querySelectorAll(".sidebar__listitem");
+  lists.forEach((list) => {
+    list.classList.remove("active-list");
+  });
+
+  // Change active list to new list
+  activeList = masterList.items[0];
+
+  // Clear title input and hide
+  sidebarAddListTitleInput.value = "";
+  toggleSidebarNewListTitle(sidebarAddListTitleContainer);
+  toggleButtonSpin(btnAddList);
+
+  updateSidebarUI();
+  updateActiveListUI();
+  updateActiveListTitle(activeListTitle, activeList.title);
+});
+
+//* SIDEBAR LIST OPTIONS
+// Open List options
 sidebar.addEventListener("click", (e) => {
   const clicked = e.target.closest(".btn__listitem__options");
   if (!clicked) return;
@@ -309,6 +412,7 @@ sidebar.addEventListener("click", (e) => {
   toggleSidebarListOptions(clicked);
 });
 
+// List Options
 sidebar.addEventListener("click", (e) => {
   const clickedTrash = e.target.closest(".btn__listitem--del");
   const clickedArrowUp = e.target.closest(".btn__listitem--up");
@@ -316,9 +420,42 @@ sidebar.addEventListener("click", (e) => {
 
   if (!clickedTrash && !clickedArrowUp && !clickedArrowDown) return;
 
+  // Close menu if any clicked
   if (clickedTrash || clickedArrowUp || clickedArrowDown) {
     const clicked = clickedTrash || clickedArrowUp || clickedArrowDown;
     hideSidebarListOptions(clicked);
+  }
+
+  // Delete selected list
+  if (clickedTrash) {
+    const itemInArrIndex = masterList.items.findIndex(
+      (list) => list.id === +clickedTrash.closest(".sidebar__listitem").id
+    );
+
+    if (masterList.items.length === 1) return;
+    if (masterList.items[itemInArrIndex].id === activeList.id) {
+      activeList = masterList.items[1];
+    }
+
+    masterList.deleteItem(itemInArrIndex);
+
+    updateSidebarUI();
+    updateActiveListUI();
+    updateActiveListTitle(activeListTitle, activeList.title);
+  }
+
+  // Move selected list up
+  if (clickedArrowUp) {
+    const itemInArrIndex = findListIndex(clickedArrowUp);
+    masterList.moveItem(itemInArrIndex, -1);
+    updateSidebarUI();
+  }
+
+  // Move selected list down
+  if (clickedArrowDown) {
+    const itemInArrIndex = findListIndex(clickedArrowDown);
+    masterList.moveItem(itemInArrIndex, 1);
+    updateSidebarUI();
   }
 });
 
@@ -376,7 +513,7 @@ btnFormSubmit.addEventListener("click", (e) => {
     activeList.items[curTaskIndex].desc = formDesc.value;
     activeList.items[curTaskIndex].dateDue = formDue.value;
 
-    updateUI();
+    updateActiveListUI();
   }
 
   // Hide and reset form
@@ -394,7 +531,12 @@ const masterList = new MasterList();
 masterList.addItem("Main List");
 
 // Add Default list to sidebar
-addList(sidebarHeader, masterList.items[0].title, 0);
+addList(
+  sidebarHeader,
+  masterList.items[0].title,
+  masterList.items[0].items.length,
+  masterList.items[0].id
+);
 
 // Update activeList visual
 let activeList = masterList.items[0];
@@ -403,13 +545,14 @@ updateActiveListTitle(activeListTitle, activeList.title);
 //! TESTING AREA ----------------------------
 
 logo.addEventListener("click", () => {
-  console.table(Date.parse(activeList.items[0].dateDue));
+  console.log(masterList.items);
 });
 
 formTitle.addEventListener("click", () => {});
 
 activeListHeader.addEventListener("click", function () {});
 
+// console.log(Date.now() / );
 /**
  *
  *

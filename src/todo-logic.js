@@ -16,10 +16,13 @@ class MasterList {
     return this;
   }
 
+  /**
+   * 
+
+   * @param dir = 1 if moved down; -1 if moved up 
+   */
   moveItem(index, dir) {
     const movedItem = this.items.splice(index, 1)[0];
-    console.log(movedItem);
-    console.log(index + dir);
     this.items.splice(index + dir, 0, movedItem);
     return this;
   }

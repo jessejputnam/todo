@@ -1,6 +1,11 @@
 "use strict";
 
-import { differenceInCalendarDays, compareAsc, parseISO } from "date-fns";
+import {
+  differenceInCalendarDays,
+  compareAsc,
+  formatDistanceToNowStrict,
+  parseISO,
+} from "date-fns";
 
 /**
  * TABLE OF CONTENTS
@@ -265,9 +270,11 @@ const hideTaskDetails = function (el) {
   el.removeChild(el.lastElementChild);
 };
 
-const addList = function (el, title, numDue) {
+const addList = function (el, title, numDue, id, activeListID) {
   const htmlListItem = `
-    <div class="sidebar__listitem">
+    <div class="sidebar__listitem${
+      activeListID === id ? " active-list" : ""
+    }" id="${id}">
       <div class="listitem__options__container">
       <img 
         src="./images/lists-menu.png"
@@ -306,23 +313,23 @@ const addList = function (el, title, numDue) {
 };
 
 const daysLeft = function (date) {
-  const today = new Date();
-  const dateDue = Date.parse(date);
+  const dateISO = parseISO(date);
+  const result = formatDistanceToNowStrict(dateISO, {
+    addSuffix: true,
+    unit: "day",
+  });
 
-  if (compareAsc(today, dateDue) === 1) {
-    return "OVERDUE!";
-  } else {
-    const diff = differenceInCalendarDays(dateDue, today) + 1;
+  let output;
 
-    if (diff == 0) {
-      return "Today";
-    }
-    if (diff === 1) {
-      return "Tomorrow";
-    }
-
-    return `Due in ${diff} days`;
+  if (result === "in 0 days") output = "Due tomorrow";
+  else if (result === "1 day ago") output = "Due today";
+  else if (result.includes("days ago")) output = "Overdue!";
+  else {
+    const fixStupidDate = differenceInCalendarDays(dateISO, new Date());
+    output = `Due in ${fixStupidDate} days`;
   }
+
+  return output;
 };
 
 const addTask = function (el, title, dateDue, priority, id, completed) {
@@ -373,7 +380,6 @@ export {
   toggleInactiveDetailsBtns,
   expandSelectedDetails,
   hideNonSelectedDetails,
-  hideTaskDetails,
   addPriorityVisual,
   removePriorityVisual,
   toggleSidebarListOptions,
@@ -385,7 +391,7 @@ export {
   addErrorOutline,
   toggleHideEl,
   toggleButtonSpin,
-  daysLeft, // Delete when done testing
   addTask,
   toggleTaskCompletedDueDate,
+  daysLeft,
 };
