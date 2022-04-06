@@ -1,11 +1,6 @@
 "use strict";
 
-import {
-  differenceInCalendarDays,
-  compareAsc,
-  formatDistanceToNowStrict,
-  parseISO,
-} from "date-fns";
+import { formatDistanceToNowStrict, parseISO } from "date-fns";
 
 /**
  * TABLE OF CONTENTS
@@ -16,6 +11,7 @@ import {
  * Sidebar Buttons
  * Active Task List
  * HTML Inserts
+ * Exports
  
  **/
 
@@ -367,10 +363,6 @@ const addTask = function (el, title, dateDue, priority, id, completed) {
 
   el.insertAdjacentHTML("afterend", htmlTaskItem);
 };
-
-/* ************************************************** */
-//* FIND PARENT ELEMENTS AND CORRESPONDING ARRAY INDEXES
-/* ************************************************** */
 
 /* ************************************************** */
 //* EXPORTS

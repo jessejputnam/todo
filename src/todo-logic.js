@@ -1,5 +1,14 @@
 "use strict";
 
+/**
+ 
+ TABLE OF CONTENTS
+ * Master List
+ * Lists
+ * Tasks
+ 
+ */
+
 // MASTER LIST
 class MasterList {
   constructor() {

@@ -232,8 +232,6 @@ sortOptsContainer.addEventListener("click", (e) => {
 
   if (!clicked) return;
 
-  console.log(clicked.dataset.sortid);
-
   activeList.sortItems(clicked.dataset.sortid);
 
   updateActiveListUI();
@@ -416,6 +414,9 @@ btnAddListTitle.addEventListener("click", () => {
 sidebar.addEventListener("click", (e) => {
   const clicked = e.target.closest(".btn__listitem__options");
   if (!clicked) return;
+
+  console.log(clicked);
+  console.log(clicked.parentElement.lastElementChild);
 
   if (!clicked.parentElement.lastElementChild.classList.contains("hidden")) {
     toggleSidebarListOptions(clicked);
