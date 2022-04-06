@@ -17,9 +17,7 @@ class MasterList {
   }
 
   /**
-   * 
-
-   * @param dir = 1 if moved down; -1 if moved up 
+   * @param dir = 1 if moved down; -1 if moved up
    */
   moveItem(index, dir) {
     const movedItem = this.items.splice(index, 1)[0];

@@ -177,12 +177,10 @@ const toggleTaskCompletedDueDate = function (clicked, activeList, itemIndex) {
 // Sidebar lists options
 const toggleSidebarListOptions = function (clicked) {
   toggleHideEl(clicked.parentElement.lastElementChild);
-  // clicked.parentElement.lastElementChild.classList.toggle("hidden");
 };
 
 const hideSidebarListOptions = function (clicked) {
   toggleHideEl(clicked.parentElement);
-  // clicked.parentElement.classList.add("hidden");
 };
 
 const toggleSidebarNewListTitle = function (el) {
@@ -321,13 +319,19 @@ const daysLeft = function (date) {
 
   let output;
 
-  if (result === "in 0 days") output = "Due tomorrow";
-  else if (result === "1 day ago") output = "Due today";
-  else if (result.includes("days ago")) output = "Overdue!";
-  else {
-    const fixStupidDate = differenceInCalendarDays(dateISO, new Date());
-    output = `Due in ${fixStupidDate} days`;
-  }
+  if (result === "0 days ago" || result === "in 0 days") output = "Due today";
+  else if (result === "in 1 day") output = "Due tomorrow";
+  else if (result === "1 day ago") output = "Due yesterday! AH!";
+  else if (result.includes("days ago")) output = "OVERDUE!";
+  else output = `Due ${result}`;
+
+  // if (result === "in 0 days") output = "Due tomorrow";
+  // else if (result === "1 day ago") output = "Due today";
+  // else if (result.includes("days ago")) output = "Overdue!";
+  // else {
+  //   const fixStupidDate = differenceInCalendarDays(dateISO, new Date());
+  //   output = `Due in ${fixStupidDate} days`;
+  // }
 
   return output;
 };
@@ -394,4 +398,5 @@ export {
   addTask,
   toggleTaskCompletedDueDate,
   daysLeft,
+  hideTaskDetails,
 };

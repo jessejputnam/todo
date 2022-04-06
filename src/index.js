@@ -41,7 +41,7 @@ import {
   toggleButtonSpin,
   addTask,
   toggleTaskCompletedDueDate,
-  daysLeft,
+  hideTaskDetails,
 } from "./visual.js";
 
 /* ************************************************** */
@@ -54,7 +54,6 @@ const listsMenuEndBars = document.querySelectorAll(".bar__end");
 const listsMenuMidBar1 = document.querySelector(".bar__mid");
 const listsMenuMidBar2 = document.querySelector(".bar__mid2");
 const btnAddTask = document.querySelector(".add-task");
-const sortOptsContainer = document.querySelector(".sortby__opts__container");
 
 // ---- Tasks
 
@@ -76,6 +75,9 @@ const sidebarAddListTitleInput = document.querySelector(
   ".sidebar__add-list__add-title"
 );
 
+// HEADER
+const sortOptsContainer = document.querySelector(".sortby__opts__container");
+
 // FORM
 const form = document.querySelector(".form");
 const formTitle = document.querySelector(".form__title");
@@ -87,7 +89,7 @@ const formPriorityContainer = document.querySelector(
   ".form__priority__container"
 );
 
-// -- MAIN APP
+// MAIN APP
 const logo = document.querySelector(".logo__container");
 const activeListWindow = document.querySelector(".main-app");
 const activeListHeader = document.querySelector(".active-list__header");
@@ -105,6 +107,24 @@ const findListIndex = function (clickedBtn) {
   return masterList.items.findIndex(
     (list) => list.id === +clickedBtn.closest(".sidebar__listitem").id
   );
+};
+
+const closeAllOpenModals = function (e) {
+  if (
+    e.target !== btnListsMenu &&
+    !e.target.classList.contains("lists-menu__bar")
+  ) {
+    sidebar.classList.add("hidden");
+    listsMenuEndBars.forEach((bar) => bar.classList.remove("bar--vanish"));
+    listsMenuMidBar1.classList.remove("bar__mid--rotate");
+    listsMenuMidBar2.classList.remove("bar__mid2--rotate");
+  }
+
+  if (!e.target.classList.contains("img__add-task"))
+    form.classList.add("hidden");
+
+  if (!e.target.classList.contains("btn__show__sort-opts"))
+    sortOptsContainer.classList.remove("show-sort-opts");
 };
 
 const updateActiveListUI = function () {
@@ -158,8 +178,10 @@ const updateSidebarUI = function () {
 /* ************************************************** */
 //* ---------- BUTTONS ----------
 //* SIDEBAR TOGGLE
-btnListsMenu.addEventListener("click", () => {
+btnListsMenu.addEventListener("click", (e) => {
   toggleSidebar(sidebar, listsMenuEndBars, listsMenuMidBar1, listsMenuMidBar2);
+
+  closeAllOpenModals(e);
 
   // Update sidebar UI if opening sidebar
   if (btnListsMenu.firstElementChild.classList.contains("bar--vanish")) {
@@ -168,11 +190,12 @@ btnListsMenu.addEventListener("click", () => {
 });
 
 //* ADD TASK OPEN
-btnAddTask.addEventListener("click", () => {
+btnAddTask.addEventListener("click", (e) => {
   formTitle.textContent = "Add Task";
   btnFormSubmit.value = "Add Task";
   formPriorityContainer.classList.remove("invisible");
   form.removeAttribute("data-taskid");
+  closeAllOpenModals(e);
   toggleHideEl(form);
   formTaskTitle.focus();
 });
@@ -409,6 +432,19 @@ sidebar.addEventListener("click", (e) => {
   const clicked = e.target.closest(".btn__listitem__options");
   if (!clicked) return;
 
+  if (!clicked.parentElement.lastElementChild.classList.contains("hidden")) {
+    toggleSidebarListOptions(clicked);
+    return;
+  }
+
+  const listOpts = document.querySelectorAll(
+    ".listitem__options__menu__container"
+  );
+
+  listOpts.forEach(function (listOpt) {
+    listOpt.classList.add("hidden");
+  });
+
   toggleSidebarListOptions(clicked);
 });
 
@@ -545,7 +581,8 @@ updateActiveListTitle(activeListTitle, activeList.title);
 //! TESTING AREA ----------------------------
 
 logo.addEventListener("click", () => {
-  console.log(masterList.items);
+  console.log(activeList.items[0].dateDue);
+  console.log(activeList.items[0].dateDue);
 });
 
 formTitle.addEventListener("click", () => {});
