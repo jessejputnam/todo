@@ -18,7 +18,7 @@
 /* ************************************************** */
 //* MODULES
 /* ************************************************** */
-import { MasterList } from "./todo-logic.js";
+import { App } from "./todo-logic.js";
 import {
   addPriorityVisual,
   dimCompletedTasks,
@@ -41,7 +41,7 @@ import {
   toggleButtonSpin,
   addTask,
   toggleTaskCompletedDueDate,
-  hideTaskDetails,
+  hideTaskDetails
 } from "./visual.js";
 
 /* ************************************************** */
@@ -68,6 +68,7 @@ const btnFormSubmit = document.querySelector(".btn__form-submit");
 // SIDEBAR
 const sidebar = document.querySelector(".sidebar");
 const sidebarHeader = document.querySelector(".sidebar__header");
+const sidebarTitle = document.querySelector(".sidebar__title");
 const sidebarAddListTitleContainer = document.querySelector(
   ".sidebar__add-list__add-title__container"
 );
@@ -177,7 +178,7 @@ const updateSidebarUI = function () {
 //* HEADER
 /* ************************************************** */
 //* ---------- BUTTONS ----------
-//* SIDEBAR TOGGLE
+// SIDEBAR TOGGLE
 btnListsMenu.addEventListener("click", (e) => {
   toggleSidebar(sidebar, listsMenuEndBars, listsMenuMidBar1, listsMenuMidBar2);
 
@@ -189,7 +190,7 @@ btnListsMenu.addEventListener("click", (e) => {
   }
 });
 
-//* ADD TASK OPEN
+// ADD TASK OPEN
 btnAddTask.addEventListener("click", (e) => {
   formTitle.textContent = "Add Task";
   btnFormSubmit.value = "Add Task";
@@ -200,7 +201,7 @@ btnAddTask.addEventListener("click", (e) => {
   formTaskTitle.focus();
 });
 
-//* ACTIVELIST HEADER BUTTONS
+// ACTIVELIST HEADER BUTTONS
 activeListHeader.addEventListener("click", (e) => {
   const openSortOpts = e.target.closest(".btn__show__sort-opts");
   const sortDirFlip = e.target.closest(".btn__active-list__sort-dir");
@@ -224,7 +225,7 @@ activeListHeader.addEventListener("click", (e) => {
   }
 });
 
-//* SORT OPTIONS
+// SORT OPTIONS
 sortOptsContainer.addEventListener("click", (e) => {
   const clicked = e.target.closest(".sortby__opts__item");
 
@@ -241,7 +242,7 @@ sortOptsContainer.addEventListener("click", (e) => {
 //* TASK
 /* ************************************************** */
 //* ---------- BUTTONS ----------
-//* COMPLETED TASK CHECKBOX
+// COMPLETED TASK CHECKBOX
 activeListWindow.addEventListener("click", (e) => {
   const clicked = e.target.closest(".taskitem__checkbox");
   if (!clicked) return;
@@ -262,7 +263,7 @@ activeListWindow.addEventListener("click", (e) => {
   if (!clicked.checked) undoCompletedDim(clicked);
 });
 
-//* OPEN TASK DETAILS
+// OPEN TASK DETAILS
 activeListWindow.addEventListener("click", (e) => {
   const clicked = e.target.closest(".btn__details");
 
@@ -284,7 +285,7 @@ activeListWindow.addEventListener("click", (e) => {
   hideNonSelectedDetails(clicked);
 });
 
-//* CHANGE PRIORITY CHECKBOX
+// CHANGE PRIORITY CHECKBOX
 activeListWindow.addEventListener("click", (e) => {
   const clicked = e.target.closest(".taskitem__priority-check__checkbox");
   if (!clicked) return;
@@ -300,7 +301,7 @@ activeListWindow.addEventListener("click", (e) => {
   if (!clicked.checked) removePriorityVisual(clicked);
 });
 
-//* EDIT TASK
+// EDIT TASK
 activeListWindow.addEventListener("click", (e) => {
   const clicked = e.target.closest(".btn__taskitem__edit");
   if (!clicked) return;
@@ -322,7 +323,7 @@ activeListWindow.addEventListener("click", (e) => {
   toggleHideEl(form);
 });
 
-//* DELETE TASK
+// DELETE TASK
 activeListWindow.addEventListener("click", (e) => {
   const clicked = e.target.closest(".btn__taskitem__delete");
   if (!clicked) return;
@@ -364,7 +365,7 @@ sidebar.addEventListener("click", (e) => {
 });
 
 //* ---------- BUTTONS ----------
-//* SIDEBAR OPEN ADD LIST INPUT
+// SIDEBAR OPEN ADD LIST INPUT
 btnAddList.addEventListener("click", (e) => {
   toggleSidebarNewListTitle(sidebarAddListTitleContainer);
   toggleButtonSpin(btnAddList);
@@ -372,7 +373,7 @@ btnAddList.addEventListener("click", (e) => {
   sidebarAddListTitleInput.focus();
 });
 
-//* ADD NEW LIST
+// ADD NEW LIST
 btnAddListTitle.addEventListener("click", () => {
   if (sidebarAddListTitleInput.value === "") {
     sidebarAddListTitleInput.classList.add("red-outline");
@@ -414,9 +415,6 @@ btnAddListTitle.addEventListener("click", () => {
 sidebar.addEventListener("click", (e) => {
   const clicked = e.target.closest(".btn__listitem__options");
   if (!clicked) return;
-
-  console.log(clicked);
-  console.log(clicked.parentElement.lastElementChild);
 
   if (!clicked.parentElement.lastElementChild.classList.contains("hidden")) {
     toggleSidebarListOptions(clicked);
@@ -547,71 +545,40 @@ btnFormSubmit.addEventListener("click", (e) => {
 //* APP LOGIC
 /* ************************************************** */
 // Initialize Master List
-const masterList = new MasterList();
+/* Initializes the master list that will contain all project lists */
+const masterList = new App();
 
-// Add Default List to Master List
-masterList.addItem("Main List");
+masterList._getLocalStorage(masterList);
 
-// Add Default list to sidebar
-addList(
-  sidebarHeader,
-  masterList.items[0].title,
-  masterList.items[0].items.length,
-  masterList.items[0].id
-);
+console.log(masterList);
+
+if (masterList.prevDataCheck === false) {
+  // Add Default List to Master List
+  masterList.addItem("Main List");
+
+  // Add Default list to sidebar
+  addList(
+    sidebarHeader,
+    masterList.items[0].title,
+    masterList.items[0].items.length,
+    masterList.items[0].id
+  );
+}
+
+// Initialize the Active List
+let activeList = masterList.items[0];
 
 // Update activeList visual
-let activeList = masterList.items[0];
 updateActiveListTitle(activeListTitle, activeList.title);
 
-//! TESTING AREA ----------------------------
-
 logo.addEventListener("click", () => {
-  console.log(activeList.items[0].dateDue);
-  console.log(activeList.items[0].dateDue);
+  masterList._setLocalStorage();
 });
 
-formTitle.addEventListener("click", () => {});
+activeListTitle.addEventListener("click", () => {
+  masterList._getLocalStorage(masterList);
+});
 
-activeListHeader.addEventListener("click", function () {});
-
-// console.log(Date.now() / );
-/**
- *
- *
- *
- *
- *
- *
- *
- */
-
-/*
-// TEST SAMPLES
-// Create Master List
-const masterList = new MasterList();
-
-// Add Lists to Master List
-masterList.addItem("Test List");
-masterList.addItem("A Test List 2");
-masterList.addItem("Test List 3");
-masterList.addItem("Test List 4");
-
-// Add Tasks to List in Master List
-masterList.items[0].addItem("test1", "a test1 desc", "8.10");
-masterList.items[0].addItem("test2", "b test2 desc", "8.08");
-masterList.items[0].addItem("test3", "c test3 desc", "7.16");
-masterList.items[0].addItem("test4", "d test4 desc", "12.22");
-masterList.items[0].addItem("test5", "e test5 desc", "3.22");
-
-// masterList.items[0].items[1].completed = true;
-masterList.items[0].items[1].dateCreated = 100;
-// masterList.items[0].items[4].completed = true;
-
-console.log(masterList.items[0].items);
-
-masterList.items[0].items[4].toggleCompleted();
-
-masterList.items[0].items[1].togglePriority();
-console.table(masterList.items[0].items);
-*/
+sidebarTitle.addEventListener("click", () => {
+  masterList._reset();
+});

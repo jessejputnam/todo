@@ -64,6 +64,10 @@ const dimCompletedTasks = function (clicked) {
     "btn__details--completed"
   );
 
+  // Change dateDue warning
+  const dueWarn = clicked.nextElementSibling.lastElementChild;
+  dueWarn.classList.add("completed--true");
+
   // Change task item filter
   clicked.parentElement.parentElement.classList.add("completed--true");
 
@@ -81,6 +85,10 @@ const undoCompletedDim = function (clicked) {
   clicked.parentElement.lastElementChild.firstElementChild.classList.remove(
     "btn__details--completed"
   );
+
+  // Change dateDue warning
+  const dueWarn = clicked.nextElementSibling.lastElementChild;
+  dueWarn.classList.remove("completed--true");
 
   // Change task item filter
   clicked.parentElement.parentElement.classList.remove("completed--true");
@@ -311,6 +319,7 @@ const daysLeft = function (date) {
   const result = formatDistanceToNowStrict(dateISO, {
     addSuffix: true,
     unit: "day",
+    roundingMethod: "floor"
   });
 
   let output;
@@ -346,7 +355,9 @@ const addTask = function (el, title, dateDue, priority, id, completed) {
       />
       <div class="taskitem__txtbox">
         <h3>${title}</h3>
-        <p>${dateDue === "" ? `&nbsp;` : daysLeft(dateDue)}</p>
+        <p class="taskitem__due-warning">${
+          dateDue === "" ? `&nbsp;` : daysLeft(dateDue)
+        }</p>
       </div>
       <div class="taskitem__btn-details__container">
         <img
@@ -390,5 +401,5 @@ export {
   addTask,
   toggleTaskCompletedDueDate,
   daysLeft,
-  hideTaskDetails,
+  hideTaskDetails
 };

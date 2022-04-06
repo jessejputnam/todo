@@ -10,9 +10,10 @@
  */
 
 // MASTER LIST
-class MasterList {
+class App {
   constructor() {
     this.items = [];
+    this.prevDataCheck;
   }
 
   addItem(title) {
@@ -53,15 +54,56 @@ class MasterList {
     console.log("o");
     return this;
   }
+
+  _setLocalStorage() {
+    localStorage.setItem("lists", JSON.stringify(this.items));
+  }
+
+  _getLocalStorage(masterList) {
+    const data = JSON.parse(localStorage.getItem("lists"));
+
+    // Check for local storage data
+    if (!data) {
+      masterList.prevDataCheck = false;
+      return;
+    }
+
+    for (let i = 0; i < data.length; i++) {
+      masterList.items.push(new List(data[i].title));
+      masterList.items[i].id = data[i].id;
+
+      if (data[i].items.length === 0) continue;
+
+      for (let j = 0; j < data[i].items.length; j++) {
+        masterList.items[i].items.push(
+          new Task(
+            data[i].items[j].title,
+            data[i].items[j].desc,
+            data[i].items[j].dateDue,
+            data[i].items[j].priority
+          )
+        );
+        masterList.items[i].items[j].id = data[i].items[j].id;
+        masterList.items[i].items[j].completed = data[i].items[j].completed;
+        masterList.items[i].items[j].completedDate =
+          data[i].items[j].completedDate;
+      }
+    }
+  }
+
+  _reset() {
+    localStorage.removeItem("lists");
+    this.items = [];
+    this.addItem("Main List");
+  }
 }
 
 // LISTS
-class List extends MasterList {
+class List extends App {
   constructor(title) {
     super();
     this.title = title;
     this.id = Date.now();
-    this.color = "initial";
     this.items = [];
   }
 
@@ -98,7 +140,7 @@ class Task {
       this.completedDate = new Date().toLocaleString(navigator.languages[0], {
         year: "numeric",
         month: "short",
-        day: "2-digit",
+        day: "2-digit"
       });
 
     if (this.completed === false) this.completedDate = "";
@@ -113,4 +155,4 @@ class Task {
   }
 }
 
-export { MasterList, List, Task };
+export { App, List, Task };
