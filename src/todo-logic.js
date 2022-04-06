@@ -25,41 +25,23 @@ class MasterList {
     return this;
   }
 
-  sortItems(category, reverseCheck) {
-    if (category === "dateDue" || category === "completed") {
-      reverseCheck === false
-        ? this.items.sort((a, b) => a[category] - b[category])
-        : this.items.sort((a, b) => b[category] - a[category]);
-    } else if (category === "title") {
-      reverseCheck === false
-        ? this.items.sort((a, b) => {
-            const nameA = a.title.toUpperCase();
-            const nameB = b.title.toUpperCase();
-            if (nameA < nameB) {
-              return -1;
-            }
-            if (nameA > nameB) {
-              return 1;
-            }
+  sortItems(category) {
+    if (category === "completed") {
+      this.items.sort((a, b) => a[category] - b[category]);
+      console.log("c");
+      return this;
+    }
 
-            return 0;
-          })
-        : this.items.sort((a, b) => {
-            const nameA = a.title.toUpperCase();
-            const nameB = b.title.toUpperCase();
-            if (nameA < nameB) {
-              return 1;
-            }
-            if (nameA > nameB) {
-              return -1;
-            }
+    if (category === "dateDue") {
+      this.items.sort(
+        (a, b) => Date.parse(a[category]) - Date.parse(b[category])
+      );
+      console.log("d");
+      return this;
+    }
 
-            return 0;
-          });
-    } else
-      reverseCheck === false
-        ? this.items.sort((a, b) => b[category] - a[category])
-        : this.items.sort((a, b) => a[category] - b[category]);
+    this.items.sort((a, b) => b[category] - a[category]);
+    console.log("o");
     return this;
   }
 }

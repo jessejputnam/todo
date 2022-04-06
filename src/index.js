@@ -231,25 +231,10 @@ sortOptsContainer.addEventListener("click", (e) => {
   sortOptsContainer.classList.toggle("show-sort-opts");
 
   if (!clicked) return;
-  // Sort order for Completed
-  else if (clicked.dataset.sortid === "completed")
-    activeList.items.sort(
-      (a, b) => a[clicked.dataset.sortid] - b[clicked.dataset.sortid]
-    );
-  // Sort order for Date Due
-  else if (clicked.dataset.sortid === "dateDue") {
-    activeList.items.sort(
-      (a, b) =>
-        Date.parse(a[clicked.dataset.sortid]) -
-        Date.parse(b[clicked.dataset.sortid])
-    );
-  }
 
-  // Sort order for Date Created && Priority
-  else
-    activeList.items.sort(
-      (a, b) => b[clicked.dataset.sortid] - a[clicked.dataset.sortid]
-    );
+  console.log(clicked.dataset.sortid);
+
+  activeList.sortItems(clicked.dataset.sortid);
 
   updateActiveListUI();
 });
