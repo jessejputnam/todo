@@ -317,26 +317,24 @@ const addList = function (el, title, numDue, id, activeListID) {
 const daysLeft = function (date) {
   const dateISO = parseISO(date);
   const result = formatDistanceToNowStrict(dateISO, {
-    addSuffix: true,
-    unit: "day",
-    roundingMethod: "floor"
+    addSuffix: true
   });
 
   let output;
 
-  if (result === "0 days ago" || result === "in 0 days") output = "Due today";
-  else if (result === "in 1 day") output = "Due tomorrow";
-  else if (result === "1 day ago") output = "Due yesterday! AH!";
-  else if (result.includes("days ago")) output = "OVERDUE!";
-  else output = `Due ${result}`;
+  const test = [
+    { title: "date:", value: date },
+    { title: "dateISO:", value: dateISO },
+    { title: "Date():", value: new Date() },
+    { title: "result:", value: result }
+  ];
 
-  // if (result === "in 0 days") output = "Due tomorrow";
-  // else if (result === "1 day ago") output = "Due today";
-  // else if (result.includes("days ago")) output = "Overdue!";
-  // else {
-  //   const fixStupidDate = differenceInCalendarDays(dateISO, new Date());
-  //   output = `Due in ${fixStupidDate} days`;
-  // }
+  console.table(test);
+
+  if (result.includes("hours ago")) output = "Due today";
+  else if (result.includes("hours")) output = "Due tomorrow";
+  else if (result.includes("ago")) output = "OVERDUE!";
+  else output = `Due ${result}`;
 
   return output;
 };
@@ -355,9 +353,9 @@ const addTask = function (el, title, dateDue, priority, id, completed) {
       />
       <div class="taskitem__txtbox">
         <h3>${title}</h3>
-        <p class="taskitem__due-warning">${
-          dateDue === "" ? `&nbsp;` : daysLeft(dateDue)
-        }</p>
+        <p class="taskitem__due-warning${
+          completed ? " completed--true" : ""
+        }">${dateDue === "" ? `&nbsp;` : daysLeft(dateDue)}</p>
       </div>
       <div class="taskitem__btn-details__container">
         <img

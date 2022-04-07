@@ -214,13 +214,21 @@ activeListHeader.addEventListener("click", (e) => {
 
   // Flip Sort Directions
   if (sortDirFlip) {
+    // Data Change
     activeList.items.reverse();
+    masterList._setLocalStorage();
+
+    // Visual Change
     updateActiveListUI();
   }
 
   // Clear Completed
   if (clearCompleted) {
+    // Data Change
     activeList._clearCompletedTasks();
+    masterList._setLocalStorage();
+
+    // Visual Change
     updateActiveListUI();
   }
 });
@@ -233,8 +241,11 @@ sortOptsContainer.addEventListener("click", (e) => {
 
   if (!clicked) return;
 
+  // Data Change
   activeList.sortItems(clicked.dataset.sortid);
+  masterList._setLocalStorage();
 
+  // Visual Update
   updateActiveListUI();
 });
 
@@ -251,15 +262,13 @@ activeListWindow.addEventListener("click", (e) => {
 
   // Data Change
   activeList.items[itemIndex].toggleCompleted();
+  masterList._setLocalStorage();
 
   // Visual Change
   toggleTaskCompletedDueDate(clicked, activeList, itemIndex);
-
   if (clicked.checked) {
     dimCompletedTasks(clicked);
   }
-
-  // Undo Change completed task visual
   if (!clicked.checked) undoCompletedDim(clicked);
 });
 
@@ -294,10 +303,10 @@ activeListWindow.addEventListener("click", (e) => {
 
   // Data Change
   activeList.items[itemIndex].togglePriority();
+  masterList._setLocalStorage();
 
   // Visual Change
   if (clicked.checked) addPriorityVisual(clicked);
-
   if (!clicked.checked) removePriorityVisual(clicked);
 });
 
@@ -308,11 +317,12 @@ activeListWindow.addEventListener("click", (e) => {
 
   const itemIndex = findItemIndex(clicked);
 
+  // Visual change to reflect edit rather than add
   formTitle.textContent = "Edit Task";
   btnFormSubmit.value = "Edit Task";
   formPriorityContainer.classList.add("invisible");
 
-  // Populate form with arr info
+  // Populate form with item info
   formTaskTitle.value = activeList.items[itemIndex].title;
   formDue.value = activeList.items[itemIndex].dateDue;
   formDesc.value = activeList.items[itemIndex].desc;
@@ -330,20 +340,23 @@ activeListWindow.addEventListener("click", (e) => {
 
   const itemIndex = findItemIndex(clicked);
 
+  // Data Change
   activeList.items.splice(itemIndex, 1);
+  masterList._setLocalStorage();
 
+  // Visual Change
   updateActiveListUI();
 });
 
 /* ************************************************** */
 //* SIDEBAR
 /* ************************************************** */
-// Remove error outline when input selected
+// Remove ?error outline on TITLE when input selected
 sidebarAddListTitleInput.addEventListener("focus", () => {
   sidebarAddListTitleInput.classList.remove("red-outline");
 });
 
-// Active List Selection
+// ACTIVE LIST SELECTION
 sidebar.addEventListener("click", (e) => {
   const clicked = e.target.closest(".listitem__title");
   if (!clicked) return;
@@ -382,6 +395,7 @@ btnAddListTitle.addEventListener("click", () => {
 
   // Change Data
   masterList.addItem(sidebarAddListTitleInput.value);
+  masterList._setLocalStorage();
 
   // Change Visual
   addList(
@@ -397,7 +411,7 @@ btnAddListTitle.addEventListener("click", () => {
     list.classList.remove("active-list");
   });
 
-  // Change active list to new list
+  // Change active list to newly created list
   activeList = masterList.items[0];
 
   // Clear title input and hide
@@ -411,7 +425,7 @@ btnAddListTitle.addEventListener("click", () => {
 });
 
 //* SIDEBAR LIST OPTIONS
-// Open List options
+// OPEN LIST OPTIONS
 sidebar.addEventListener("click", (e) => {
   const clicked = e.target.closest(".btn__listitem__options");
   if (!clicked) return;
@@ -432,7 +446,7 @@ sidebar.addEventListener("click", (e) => {
   toggleSidebarListOptions(clicked);
 });
 
-// List Options
+// LIST OPTIONS
 sidebar.addEventListener("click", (e) => {
   const clickedTrash = e.target.closest(".btn__listitem--del");
   const clickedArrowUp = e.target.closest(".btn__listitem--up");
@@ -457,8 +471,11 @@ sidebar.addEventListener("click", (e) => {
       activeList = masterList.items[1];
     }
 
+    // Data Change
     masterList.deleteItem(itemInArrIndex);
+    masterList._setLocalStorage();
 
+    // Visual Change
     updateSidebarUI();
     updateActiveListUI();
     updateActiveListTitle(activeListTitle, activeList.title);
@@ -467,14 +484,24 @@ sidebar.addEventListener("click", (e) => {
   // Move selected list up
   if (clickedArrowUp) {
     const itemInArrIndex = findListIndex(clickedArrowUp);
+
+    // Data Change
     masterList.moveItem(itemInArrIndex, -1);
+    masterList._setLocalStorage();
+
+    // Visual Change
     updateSidebarUI();
   }
 
   // Move selected list down
   if (clickedArrowDown) {
     const itemInArrIndex = findListIndex(clickedArrowDown);
+
+    // Data Change
     masterList.moveItem(itemInArrIndex, 1);
+    masterList._setLocalStorage();
+
+    // Visual Change
     updateSidebarUI();
   }
 });
@@ -504,15 +531,16 @@ btnFormSubmit.addEventListener("click", (e) => {
   if (!form.hasAttribute("data-taskid")) {
     formTaskTitle.blur();
 
-    // Add task to array
+    // Data Change -- Add task to array
     activeList.addItem(
       formTaskTitle.value,
       formDesc.value,
       formDue.value,
       formPriority.checked
     );
+    masterList._setLocalStorage();
 
-    // Add task to DOM
+    // Visual Change -- Add task to DOM
     addTask(
       activeListHeader,
       activeList.items[0].title,
@@ -529,10 +557,14 @@ btnFormSubmit.addEventListener("click", (e) => {
     const curTaskIndex = activeList.items.findIndex(
       (item) => item.id === +form.dataset.taskid
     );
+
+    // Data Change
     activeList.items[curTaskIndex].title = formTaskTitle.value;
     activeList.items[curTaskIndex].desc = formDesc.value;
     activeList.items[curTaskIndex].dateDue = formDue.value;
+    masterList._setLocalStorage();
 
+    // Visual Change
     updateActiveListUI();
   }
 
@@ -547,13 +579,14 @@ btnFormSubmit.addEventListener("click", (e) => {
 // Initialize Master List
 /* Initializes the master list that will contain all project lists */
 const masterList = new App();
+let activeList;
 
+// Load previous session data and display
 masterList._getLocalStorage(masterList);
 
-console.log(masterList);
-
+// Load new list if no previous data
 if (masterList.prevDataCheck === false) {
-  // Add Default List to Master List
+  // Add Default List set to Main List
   masterList.addItem("Main List");
 
   // Add Default list to sidebar
@@ -566,19 +599,9 @@ if (masterList.prevDataCheck === false) {
 }
 
 // Initialize the Active List
-let activeList = masterList.items[0];
+activeList = masterList.items[0];
 
 // Update activeList visual
 updateActiveListTitle(activeListTitle, activeList.title);
-
-logo.addEventListener("click", () => {
-  masterList._setLocalStorage();
-});
-
-activeListTitle.addEventListener("click", () => {
-  masterList._getLocalStorage(masterList);
-});
-
-sidebarTitle.addEventListener("click", () => {
-  masterList._reset();
-});
+updateActiveListUI();
+updateSidebarUI();
