@@ -1,7 +1,7 @@
 # To-Do List
 live: https://jessejputnam.github.io/todo/
 
-A challenge from the Odin Project to create a todo application
+A classic CRUD ToDo application. Allows users to create todos in multiple lists. Users can view different todo lists that contain different items. Items can be added, edited, or deleted. Items can also be marked as priority or not (with proper visual cue) and may be given an optional due date (which can then be seen as overdue if past the current date). Tasks may be sorted by a variety of variable such as date due, date added, completion status, etc.
 
 ## Table of contents
 
@@ -21,9 +21,14 @@ Users should be able to:
 - View the optimal layout for the site depending on their device's screen size
 - View all projects and select one at a time as active
 - View all to-dos in each project in summary
+- Add/edit/delete todo lists
+- Add/edit/delete task items
 - Expand each task to see details
 - Delete a to-do
 - Come back to saved list after refresh/exit
+- See how overdue items are if overdue
+- Mark items as priority with visual cue to denote priority items
+- Sort items by a variety of orders
 
 ## My process
 
